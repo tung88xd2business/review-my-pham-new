@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Xưởng Prompt · Video Viral Mỹ Phẩm (Tool 1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EE;
+    --card:#FFFFFF;
+    --ink:#26202B;
+    --ink-soft:#5B5060;
+    --muted:#8A7D71;
+    --line:#E7DDCF;
+    --line-strong:#D8CBB8;
+    --honey:#DE9526;
+    --honey-deep:#B9761A;
+    --honey-wash:#FBEBCF;
+    --cream-yellow:#F4CE5E;
+    --ok:#2F7D5B;
+    --err:#B23A2E;
+    --err-wash:#FBE6E2;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow:0 1px 0 rgba(38,32,43,.04), 0 8px 24px -18px rgba(38,32,43,.35);
+    /* beat tints */
+    --b-hook:#F3C6A0;
+    --b-auth:#CFE0D3;
+    --b-proof:#F4CE5E;
+    --b-sensory:#EFB6C6;
+    --b-cta:#C9B7E6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px;}
+
+  /* ---------- Header ---------- */
+  header.hero{
+    position:relative;overflow:hidden;
+    padding:52px 20px 40px;
+    text-align:center;
+  }
+  header.hero::before{
+    content:"";position:absolute;left:50%;top:-40px;transform:translateX(-50%);
+    width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle at center, rgba(244,206,94,.55), rgba(222,149,38,.18) 40%, transparent 66%);
+    filter:blur(6px);z-index:0;pointer-events:none;
+  }
+  header.hero .inner{position:relative;z-index:1;max-width:720px;margin:0 auto;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--honey-deep);font-weight:600;
+    display:inline-flex;align-items:center;gap:9px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--honey);box-shadow:0 0 0 4px var(--honey-wash);}
+  h1{
+    font-family:"Fraunces",Georgia,serif;font-weight:600;
+    font-size:clamp(30px,5.5vw,46px);line-height:1.04;letter-spacing:-.01em;
+    margin:14px 0 10px;
+  }
+  h1 em{font-style:italic;color:var(--honey-deep);}
+  .lede{color:var(--ink-soft);font-size:15.5px;max-width:560px;margin:0 auto;}
+
+  /* ---------- Section cards ---------- */
+  section.card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 22px 24px;margin-top:20px;
+  }
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;}
+  .sec-num{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+    color:var(--honey-deep);border:1px solid var(--line-strong);border-radius:6px;
+    padding:2px 7px;background:var(--honey-wash);white-space:nowrap;
+  }
+  .sec-title{font-family:"Fraunces",serif;font-weight:600;font-size:20px;letter-spacing:-.01em;}
+  .sec-hint{color:var(--muted);font-size:13px;margin:-8px 0 16px;}
+
+  label.field-label{display:block;font-weight:600;font-size:13.5px;margin:0 0 8px;color:var(--ink);}
+  .field + .field{margin-top:20px;}
+  .req{color:var(--honey-deep);font-weight:700;}
+
+  /* segmented (product / provider) */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px;}
+  .seg-opt{
+    flex:1 1 auto;min-width:160px;cursor:pointer;
+    border:1px solid var(--line-strong);border-radius:var(--radius-sm);
+    padding:12px 14px;background:#fff;transition:border-color .12s,background .12s,box-shadow .12s;
+  }
+  .seg-opt .t{font-weight:600;font-size:14px;display:block;}
+  .seg-opt .d{color:var(--muted);font-size:12px;margin-top:3px;display:block;line-height:1.4;}
+  .seg-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .seg-opt.on{border-color:var(--honey);background:var(--honey-wash);box-shadow:inset 0 0 0 1px var(--honey);}
+
+  /* chips (multi-select) */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+    border:1px solid var(--line-strong);border-radius:999px;padding:8px 13px 8px 11px;
+    font-size:13.5px;background:#fff;transition:border-color .12s,background .12s;
+    max-width:100%;
+  }
+  .chip .tick{
+    width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line-strong);
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;transition:all .12s;
+  }
+  .chip .tick svg{width:11px;height:11px;opacity:0;transform:scale(.6);transition:all .12s;}
+  .chip .lbl{font-weight:500;}
+  .chip input{position:absolute;opacity:0;pointer-events:none;}
+  .chip.on{border-color:var(--honey);background:var(--honey-wash);}
+  .chip.on .tick{background:var(--honey);border-color:var(--honey);}
+  .chip.on .tick svg{opacity:1;transform:scale(1);stroke:#fff;}
+  .chip small{color:var(--muted);font-size:11px;}
+
+  /* scene count */
+  .count-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .count-btns{display:inline-flex;gap:6px;}
+  .count-btn{
+    width:46px;height:46px;border-radius:11px;border:1px solid var(--line-strong);
+    background:#fff;font-family:"Fraunces",serif;font-size:19px;font-weight:600;color:var(--ink);
+    cursor:pointer;transition:all .12s;
+  }
+  .count-btn.on{border-color:var(--honey);background:var(--honey);color:#fff;}
+  .count-meta{color:var(--muted);font-size:13px;}
+
+  /* filmstrip */
+  .strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin-top:4px;}
+  .cell{
+    flex:0 0 auto;width:74px;aspect-ratio:9/16;border-radius:9px;position:relative;
+    border:1px solid rgba(38,32,43,.12);display:flex;flex-direction:column;
+    justify-content:space-between;padding:8px 7px;overflow:hidden;
+  }
+  .cell .n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:rgba(38,32,43,.65);}
+  .cell .bn{font-size:11px;font-weight:700;line-height:1.15;color:var(--ink);}
+  .cell .sec{font-family:"IBM Plex Mono",monospace;font-size:10px;color:rgba(38,32,43,.55);}
+  .cell::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.45),transparent 45%);pointer-events:none;}
+
+  /* inputs */
+  input[type=text],input[type=password],textarea,select{
+    width:100%;font-family:inherit;font-size:14px;color:var(--ink);
+    border:1px solid var(--line-strong);border-radius:var(--radius-sm);
+    padding:11px 12px;background:#fff;transition:border-color .12s,box-shadow .12s;
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--honey);box-shadow:0 0 0 3px var(--honey-wash);}
+  textarea{resize:vertical;min-height:64px;line-height:1.5;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .key-row{position:relative;}
+  .key-row .toggle{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;
+    font-weight:600;padding:4px 6px;font-family:inherit;
+  }
+  .inline-check{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+  .inline-check input{width:16px;height:16px;accent-color:var(--honey);}
+  .provider-note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5;}
+  .provider-note code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:var(--honey-wash);padding:1px 5px;border-radius:5px;color:var(--honey-deep);}
+  a.link{color:var(--honey-deep);text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  a.link:hover{border-color:var(--honey);}
+
+  /* generate */
+  .go-row{margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  button.primary{
+    font-family:inherit;font-weight:600;font-size:15px;color:#fff;
+    background:var(--honey);border:1px solid var(--honey-deep);border-radius:11px;
+    padding:13px 26px;cursor:pointer;transition:background .12s,transform .06s;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  button.primary:hover{background:var(--honey-deep);}
+  button.primary:active{transform:translateY(1px);}
+  button.primary:disabled{opacity:.55;cursor:not-allowed;}
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .go-status{font-size:13px;color:var(--muted);}
+
+  /* output */
+  #output{margin-top:24px;display:none;}
+  #output.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .tabs{display:inline-flex;background:var(--honey-wash);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;}
+  .tab{border:none;background:none;font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-soft);
+    padding:8px 15px;border-radius:8px;cursor:pointer;transition:all .12s;}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);}
+  .out-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+  .copy-btn{
+    font-family:inherit;font-size:12.5px;font-weight:600;color:var(--honey-deep);
+    background:#fff;border:1px solid var(--line-strong);border-radius:8px;padding:8px 13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;transition:all .12s;
+  }
+  .copy-btn:hover{border-color:var(--honey);background:var(--honey-wash);}
+  pre.out{
+    background:#231C29;color:#F2E9DA;border-radius:12px;padding:18px;overflow:auto;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.6;max-height:520px;
+    border:1px solid #382E40;white-space:pre;margin:0;
+  }
+  pre.out.prose{white-space:pre-wrap;color:#EFE7DA;}
+  .th{font-family:"Noto Sans Thai","IBM Plex Mono",monospace;}
+  .pane{display:none;}
+  .pane.on{display:block;}
+
+  /* error / info */
+  .panel{border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.55;margin-top:16px;}
+  .panel.error{background:var(--err-wash);border:1px solid #E7B6AE;color:#7d2a20;display:none;}
+  .panel.error.show{display:block;}
+  .panel.error strong{color:var(--err);}
+
+  footer.foot{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;line-height:1.6;}
+  footer.foot .reset{background:none;border:none;color:var(--honey-deep);cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;text-decoration:underline;padding:0;}
+
+  /* product presets + upload */
+  .presets{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:9px;font-size:12.5px;color:var(--muted);}
+  .preset{
+    font-family:inherit;font-size:12px;font-weight:600;color:var(--honey-deep);
+    background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:5px 11px;cursor:pointer;transition:all .12s;
+  }
+  .preset:hover{border-color:var(--honey);background:var(--honey-wash);}
+  .drop{
+    border:1.5px dashed var(--line-strong);border-radius:var(--radius-sm);background:#FEFCF8;
+    padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
+    cursor:pointer;color:var(--honey-deep);transition:border-color .12s,background .12s;
+  }
+  .drop:hover,.drop:focus,.drop.drag{border-color:var(--honey);background:var(--honey-wash);outline:none;}
+  .drop .drop-t{font-weight:600;font-size:13.5px;color:var(--ink);}
+  .drop .drop-d{font-size:12px;color:var(--muted);}
+  .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+  .thumb{position:relative;width:84px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line-strong);background:#fff;}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb .rm{
+    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+    background:rgba(38,32,43,.78);color:#fff;border:none;cursor:pointer;font-size:14px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .thumb .rm:hover{background:var(--err);}
+
+  @media (max-width:560px){
+    .two-col{grid-template-columns:1fr;}
+    .seg-opt{min-width:0;flex:1 1 100%;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:0.001ms !important;transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="eyebrow"><span class="dot"></span>Tool 1 · Xưởng viết prompt</span>
+    <h1>Ráp <em>scene</em> cho video review mỹ phẩm viral</h1>
+    <p class="lede">Chọn 4 biến số theo công thức 5 nhịp, tool gọi API AI để sinh mảng scene đúng schema (ghép trên Google&nbsp;Flow / Veo) kèm bản prompt văn xuôi.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1. Nguồn -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">Nguồn phân tích</span></div>
+    <div class="field">
+      <label class="field-label" for="source">Bộ công thức đang dùng</label>
+      <select id="source">
+        <option value="thai_glassskin">Mỹ phẩm UGC Thái — glass skin (5 video, khung 5 nhịp)</option>
+      </select>
+      <p class="sec-hint" style="margin:8px 0 0;">Rút từ Phần&nbsp;B/C của tài liệu: dọc 9:16, ring light glass-skin, voiceover nữ, jump-cut nhanh.</p>
+    </div>
+  </section>
+
+  <!-- 2. Bốn biến số -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Bốn biến số hoán đổi</span></div>
+
+    <div class="field">
+      <label class="field-label" for="productName">Tên sản phẩm <span class="req">(bắt buộc)</span></label>
+      <input type="text" id="productName" autocomplete="off" placeholder="VD: Serum Vitamin C ABC Glow / Kem chống nắng XYZ…" />
+      <div class="presets">
+        <span>Điền mẫu từ tài liệu:</span>
+        <button type="button" class="preset" data-preset="essence">NAWANNA Essence</button>
+        <button type="button" class="preset" data-preset="ginseng_cream">Yerpall Kem sâm</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="productDesc">Mô tả / thông tin sản phẩm <span class="req">(nên có)</span></label>
+      <textarea id="productDesc" placeholder="Bao bì, kết cấu, màu sắc, mùi, công dụng chính, điểm bán hàng… VD: hũ thuỷ tinh mờ, nắp vặn vàng, kem đặc màu vàng bơ, dưỡng ẩm + làm sáng, chiết xuất sâm."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Ảnh sản phẩm <span style="font-weight:400;color:var(--muted)">(tối đa 3 · gửi kèm cho model để dựng đúng bao bì)</span></label>
+      <div class="drop" id="dropZone" tabindex="0" role="button" aria-label="Tải ảnh sản phẩm">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="drop-t">Kéo thả hoặc bấm để chọn ảnh</span>
+        <span class="drop-d">JPG/PNG/WebP · tự nén để gửi nhẹ</span>
+        <input type="file" id="fileInput" accept="image/*" multiple hidden />
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Hook <span class="req">(chọn ≥1 · có thể kết hợp)</span></label>
+      <div class="chips" id="hookChips"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Proof — bằng chứng <span class="req">(chọn ≥1)</span></label>
+      <div class="chips" id="proofChips"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">CTA — chốt đơn <span class="req">(chọn ≥1)</span></label>
+      <div class="chips" id="ctaChips"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="note">Ghi chú định hướng <span style="font-weight:400;color:var(--muted)">(tuỳ chọn)</span></label>
+      <textarea id="note" placeholder="VD: nhấn cảm giác 'ฟู–เด้ง', tông phòng ngủ ấm, người dẫn ~35 tuổi, thêm cảnh báo hàng giả…"></textarea>
+    </div>
+  </section>
+
+  <!-- 3. Độ dài -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Số cảnh &amp; độ dài</span></div>
+    <p class="sec-hint">1 cảnh = 1 clip ~10s để ghép trên Flow/Veo. Các nhịp bắt buộc (Hook · Proof · Cảm quan · CTA) luôn được đảm bảo.</p>
+    <div class="count-row">
+      <div class="count-btns" id="countBtns"></div>
+      <span class="count-meta" id="countMeta"></span>
+    </div>
+    <div class="strip" id="strip" aria-hidden="true"></div>
+  </section>
+
+  <!-- 4. API -->
+  <section class="card">
+    <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">Nhà cung cấp API</span></div>
+    <div class="field">
+      <label class="field-label">Chọn provider</label>
+      <div class="segmented" id="providerSeg"></div>
+    </div>
+    <div class="two-col" style="margin-top:20px;">
+      <div>
+        <label class="field-label" for="model">Model</label>
+        <input type="text" id="model" list="modelList" autocomplete="off" spellcheck="false" />
+        <datalist id="modelList"></datalist>
+      </div>
+      <div>
+        <label class="field-label" for="apikey">API key</label>
+        <div class="key-row">
+          <input type="password" id="apikey" autocomplete="off" spellcheck="false" placeholder="Dán key của bạn" />
+          <button type="button" class="toggle" id="keyToggle">Hiện</button>
+        </div>
+      </div>
+    </div>
+    <label class="inline-check"><input type="checkbox" id="remember" /> Nhớ key &amp; lựa chọn trong trình duyệt này (localStorage)</label>
+    <p class="provider-note" id="providerNote"></p>
+  </section>
+
+  <!-- Generate -->
+  <div class="go-row">
+    <button class="primary" id="goBtn"><span id="goSpin" style="display:none" class="spinner"></span><span id="goLabel">Sinh prompt</span></button>
+    <span class="go-status" id="goStatus"></span>
+  </div>
+
+  <div class="panel error" id="errPanel"></div>
+
+  <!-- Output -->
+  <section class="card" id="output">
+    <div class="out-head">
+      <div class="tabs">
+        <button class="tab on" data-pane="json">Mảng scene (JSON)</button>
+        <button class="tab" data-pane="prose">Prompt văn xuôi</button>
+      </div>
+      <button class="copy-btn" id="copyBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span id="copyLabel">Copy JSON</span>
+      </button>
+    </div>
+    <div class="pane on" id="paneJson"><pre class="out" id="jsonOut"></pre></div>
+    <div class="pane" id="paneProse"><pre class="out prose" id="proseOut"></pre></div>
+  </section>
+
+  <footer class="foot">
+    <strong style="color:var(--ink-soft)">Bảo mật:</strong> file chạy hoàn toàn phía trình duyệt. API key chỉ nằm ở ô nhập và (nếu bạn bật) localStorage trên máy bạn — không hardcode, không gửi đi đâu ngoài API của provider bạn chọn. An toàn để đẩy file này công khai lên GitHub Pages.
+    <div style="margin-top:8px;">Dữ liệu đã lưu: <button class="reset" id="resetBtn">xoá khỏi trình duyệt</button></div>
+  </footer>
+
+</div>
+
+<script>
+/* =====================================================================
+   KNOWLEDGE BASE — trích thẳng Phần C của tài liệu (C1 style, C2 banks,
+   C3 schema, C4 vocab, C5 example). Gửi kèm mỗi lần gọi API.
+   ===================================================================== */
+const GLOBAL_STYLE = {
+  format:"vertical 9:16, short-form UGC skincare review, 30-60s",
+  render_style:"ultra-photorealistic, shot on high-end smartphone front camera, 4k, visible natural skin pores, real dewy shine, NO heavy beauty filter",
+  camera_base:"handheld with subtle organic micro-jitter, 35mm-equivalent, shallow depth of field, static framing with occasional mechanical push-in when product moves toward lens",
+  lighting_base:"high-key soft frontal ring light, circular catchlight in pupils, strong specular highlights on cheekbones/nose/forehead to sell wet glass-skin texture, minimal shadow",
+  color_base:"warm tone, natural saturation, healthy peach skin tones, raw smartphone color profile (avoid cinematic teal-orange)",
+  editing_base:"fast jump-cuts every 2-4s, hard cuts only, no fancy transitions, cut on subject's motion to keep speech continuous",
+  audio_base:"original Thai female voiceover, high-pitch, fast pace ~1.3-1.5x, no dead air; BGM optional (low lo-fi only for 'clinical/lab' variant)",
+  aspect_ratio:"9:16",
+  language_on_screen:"Thai (bold white font, black or colored outline)"
+};
+
+const HOOKS = [
+  {id:"negative_warning", label:"Cảnh báo ngược", desc:"presenter warns 'think twice before using this' to trigger curiosity"},
+  {id:"age_contrast_PIP", label:"Đối lập tuổi (PIP)", desc:"small overlay photo of younger age vs current glowing skin"},
+  {id:"money_challenge", label:"Thách thức tiền thưởng", desc:"'1,000,000 baht if any banned substance is found'"},
+  {id:"celebrity_paradox", label:"Nghịch lý người nổi tiếng", desc:"A-list star personally buying a budget product"},
+  {id:"no_filter_proof", label:"Chứng minh không filter", desc:"hand covering face to break the phone's beauty filter"},
+  {id:"sensory_hook", label:"Hook cảm quan", desc:"'it's plump, hydrated, bouncy' while showing dewy skin"}
+];
+const PROOFS = [
+  {id:"empty_bottle", label:"Chai/hũ gần hết", desc:"nearly-finished product held to lens to prove real usage"},
+  {id:"lab_certificate", label:"Giấy kiểm nghiệm", desc:"official medical lab test sheet with red seal stamp, nails pointing at negative results"},
+  {id:"million_units", label:"Triệu hũ đã bán", desc:"verbal social proof 'millions of jars sold'"},
+  {id:"skin_vs_hand_contrast", label:"Đối lập da mặt/da tay", desc:"pale glowing face next to tanned hand"},
+  {id:"realtime_glassskin", label:"Glass skin thời gian thực", desc:"light glistening on face at the moment of application"}
+];
+const CTAS = [
+  {id:"soft_self_buy", label:"CTA ngầm (tự mua thêm)", desc:"'I'm about to reorder 3 more jars'"},
+  {id:"hard_add_to_cart", label:"CTA cứng (bấm giỏ)", desc:"shout 'add to cart!' + finger pointing to bottom-left shop link"},
+  {id:"counterfeit_urgency", label:"Cảnh báo hàng giả (FOMO)", desc:"beware of fakes, promo 3 bottles today only"},
+  {id:"engagement_loop", label:"Vòng lặp tương tác (tag brand)", desc:"tag the brand so they hire me as ambassador"}
+];
+
+const VOCAB = {
+  camera:"ECU / CU / MCU / MS, eye-level, static, mechanical push-in, handheld micro-jitter, shallow depth of field, 35mm",
+  lighting:"high-key ring light, catchlight in pupils, specular highlights, dewy glow, soft frontal fill, no harsh shadow",
+  skin_texture:"glass skin, dewy, plump, hydrated, glossy, wet-look, visible pores, natural skin texture, custard-yellow cream, clear watery essence",
+  color:"warm tone, peach skin tones, amber-brown bottle, cream/beige background, natural saturation, raw phone color",
+  mood:"authentic UGC, cozy bedroom, sisterly, high-energy, trustworthy, everyday vlog, clinical-clean (variant)",
+  audio:"fast-paced Thai female voiceover, high-pitch, no dead air, low lo-fi BGM (optional), paper-rustle SFX, jar-click SFX",
+  editing:"jump-cut, hard cut, motion-matched cut, seamless verbal flow"
+};
+
+// C3 schema shape (for the model to follow exactly)
+const SCENE_SCHEMA = {
+  scene_id:"integer",
+  beat:"Hook | Authenticity | Proof | SensoryDemo | Offer_CTA",
+  duration_seconds:"number (2-13)",
+  subject:"string (age, ethnicity, hair, wardrobe, skin state)",
+  action:"string (exact physical action + product interaction)",
+  setting:"string (background, props)",
+  camera:{shot_type:"ECU | CU | MCU | MS", angle:"eye-level | slight-low | 45-degree | profile", movement:"static | push-in | subtle drift | handheld-jitter"},
+  lighting:"string (inherit global_style unless overridden)",
+  color_palette:"string",
+  style_mood:"string (keywords)",
+  on_screen_text:{content_th:"string", position:"string", style:"string"},
+  audio:{voiceover_th:"string (verbatim line)", tone:"string", sfx:"string|none", bgm:"string|none"},
+  transition_to_next:"hard-cut | jump-cut",
+  purpose:"string (role in the 5-beat structure)"
+};
+
+// C5 few-shot example scene
+const EXAMPLE_SCENE = {
+  scene_id:1, beat:"Hook", duration_seconds:3,
+  subject:"A 37-year-old Thai woman, long sleek black hair, peach knit cardigan, exceptionally glowing glass skin",
+  action:"Holds an amber essence bottle upside down near her forehead, letting clear viscous liquid drip down her right cheek, playful warning expression to camera",
+  setting:"Cozy home bedroom, white wooden door and light-grey bedding blurred in background",
+  camera:{shot_type:"MCU", angle:"eye-level", movement:"static with handheld micro-jitter"},
+  lighting:"high-key soft ring light, circular catchlight in pupils, strong dewy specular highlights on cheeks",
+  color_palette:"warm tone, peach cardigan, amber bottle, beige background, natural saturation",
+  style_mood:"authentic UGC, cozy, sisterly, high-energy",
+  on_screen_text:{content_th:"อายุ 37 / [PIP] อายุ 34", position:"chest area + top-left overlay photo", style:"bold rounded white font, colored outline"},
+  audio:{voiceover_th:"คำเตือน ใครจะใช้น้ำตบตัวนี้คิดดีๆ ก่อนนะ", tone:"fast, playful-warning, high-pitch", sfx:"none", bgm:"none"},
+  transition_to_next:"jump-cut",
+  purpose:"3-second stop-scroll hook via negative-warning + age-contrast curiosity"
+};
+
+// beat metadata
+const BEAT_META = {
+  Hook:        {vi:"Hook",              pct:"0–10%",   tint:"var(--b-hook)"},
+  Authenticity:{vi:"Hoá giải hoài nghi", pct:"10–25%",  tint:"var(--b-auth)"},
+  Proof:       {vi:"Bằng chứng",         pct:"25–55%",  tint:"var(--b-proof)"},
+  SensoryDemo: {vi:"Cảm quan / demo",    pct:"55–80%",  tint:"var(--b-sensory)"},
+  Offer_CTA:   {vi:"Ưu đãi + CTA",       pct:"80–100%", tint:"var(--b-cta)"}
+};
+const BEAT_PLANS = {
+  3:["Hook","Proof","Offer_CTA"],
+  4:["Hook","Proof","SensoryDemo","Offer_CTA"],
+  5:["Hook","Authenticity","Proof","SensoryDemo","Offer_CTA"],
+  6:["Hook","Authenticity","Proof","Proof","SensoryDemo","Offer_CTA"]
+};
+
+/* ===== Provider config (đã tra docs hiện hành, 2026) ===== */
+const PROVIDERS = {
+  gemini:{
+    name:"Gemini (Google)",
+    models:["gemini-3.5-flash","gemini-3.5-pro","gemini-2.5-flash"],
+    defaultModel:"gemini-3.5-flash",
+    note:'Gọi trực tiếp <code>generativelanguage.googleapis.com/v1beta/…:generateContent</code> từ browser OK. Key gắn qua query <code>?key=</code>. Lấy key ở Google AI Studio.'
+  },
+  openai:{
+    name:"OpenAI",
+    models:["gpt-5.4-mini","gpt-5.5","gpt-5.4","gpt-5.4-nano","gpt-4.1-mini","gpt-4o-mini"],
+    defaultModel:"gpt-5.4-mini",
+    note:'Gọi <code>api.openai.com/v1/chat/completions</code>. Dòng GPT‑5.x/o‑series dùng <code>max_completion_tokens</code> &amp; không nhận temperature tuỳ chỉnh — tool tự xử lý theo model.'
+  },
+  claude:{
+    name:"Claude (Anthropic)",
+    models:["claude-sonnet-5","claude-opus-4-8","claude-haiku-4-5-20251001"],
+    defaultModel:"claude-sonnet-5",
+    note:'Gọi <code>api.anthropic.com/v1/messages</code> — bắt buộc header <code>anthropic-dangerous-direct-browser-access: true</code> để qua CORS từ browser.'
+  }
+};
+
+/* =====================================================================
+   STATE + PERSISTENCE
+   ===================================================================== */
+const LS = "vpb_v1";
+const state = {
+  productName:"",
+  productDesc:"",
+  productImages:[],   // {name, mime, b64, url} — KHÔNG lưu vào localStorage (ảnh nặng)
+  hooks:["negative_warning"],
+  proofs:["empty_bottle"],
+  ctas:["soft_self_buy"],
+  note:"",
+  sceneCount:5,
+  provider:"gemini",
+  models:{gemini:PROVIDERS.gemini.defaultModel, openai:PROVIDERS.openai.defaultModel, claude:PROVIDERS.claude.defaultModel},
+  keys:{gemini:"", openai:"", claude:""},
+  remember:false
+};
+function save(){
+  if(!state.remember){ localStorage.removeItem(LS); return; }
+  try{
+    const copy = Object.assign({}, state);
+    delete copy.productImages;              // ảnh không lưu vào localStorage
+    localStorage.setItem(LS, JSON.stringify(copy));
+  }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(LS);
+    if(!raw) return;
+    const s = JSON.parse(raw);
+    Object.assign(state, s);
+    state.productImages = [];              // ảnh chỉ tồn tại trong phiên
+    state.remember = true;
+  }catch(e){}
+}
+load();
+
+/* =====================================================================
+   RENDER UI
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const TICK = '<span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></span>';
+
+/* ---- Sản phẩm: tên / mô tả / ảnh ---- */
+const PRESET_FILL = {
+  essence:{ name:"NAWANNA Lovely Essence (nước tăm)", desc:"amber/brown semi-transparent bottle, black nozzle cap, minimalist white-text label, clear watery-viscous liquid dripping down cheek" },
+  ginseng_cream:{ name:"Yerpall Ginseng Night Cream (kem sâm)", desc:"small frosted glass jar, white/gold screw lid, thick glossy custard-yellow ginseng night cream" }
+};
+const MAX_IMAGES = 3;
+
+$("productName").value = state.productName;
+$("productDesc").value = state.productDesc;
+$("productName").addEventListener('input', e=>{ state.productName=e.target.value; save(); });
+$("productDesc").addEventListener('input', e=>{ state.productDesc=e.target.value; save(); });
+document.querySelectorAll('.preset').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const p=PRESET_FILL[b.dataset.preset]; if(!p) return;
+    state.productName=p.name; state.productDesc=p.desc;
+    $("productName").value=p.name; $("productDesc").value=p.desc; save();
+  });
+});
+
+function renderThumbs(){
+  $("thumbs").innerHTML = state.productImages.map((im,i)=>`
+    <div class="thumb"><img src="${im.url}" alt="${im.name||('ảnh '+(i+1))}">
+      <button class="rm" data-i="${i}" title="Xoá" aria-label="Xoá ảnh">×</button></div>`).join('');
+  $("thumbs").querySelectorAll('.rm').forEach(btn=>{
+    btn.addEventListener('click',()=>{ state.productImages.splice(+btn.dataset.i,1); renderThumbs(); });
+  });
+}
+function resizeImage(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error("Không đọc được ảnh"));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error("Ảnh lỗi"));
+      img.onload=()=>{
+        const MAX=1152;
+        let {width:w,height:h}=img;
+        if(Math.max(w,h)>MAX){ const s=MAX/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+        const c=document.createElement("canvas"); c.width=w; c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        const url=c.toDataURL("image/jpeg",0.85);
+        resolve({name:file.name, mime:"image/jpeg", b64:url.split(",")[1], url});
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function addFiles(fileList){
+  const files=[...fileList].filter(f=>f.type.startsWith("image/"));
+  for(const f of files){
+    if(state.productImages.length>=MAX_IMAGES){ setStatus(`Tối đa ${MAX_IMAGES} ảnh.`); break; }
+    try{ state.productImages.push(await resizeImage(f)); renderThumbs(); }
+    catch(e){ setStatus("Bỏ qua 1 ảnh lỗi."); }
+  }
+}
+$("fileInput").addEventListener("change", e=>{ addFiles(e.target.files); e.target.value=""; });
+const dz=$("dropZone");
+dz.addEventListener("click",()=>$("fileInput").click());
+dz.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $("fileInput").click(); }});
+["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.add("drag"); }));
+["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove("drag"); }));
+dz.addEventListener("drop",e=>{ if(e.dataTransfer?.files) addFiles(e.dataTransfer.files); });
+function renderChips(containerId, bank, selKey){
+  $(containerId).innerHTML = bank.map(o=>`
+    <label class="chip ${state[selKey].includes(o.id)?'on':''}" data-id="${o.id}">
+      <input type="checkbox" ${state[selKey].includes(o.id)?'checked':''}>
+      ${TICK}<span class="lbl">${o.label}</span>
+    </label>`).join('');
+  $(containerId).querySelectorAll('.chip').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const id = el.dataset.id;
+      const arr = state[selKey];
+      const i = arr.indexOf(id);
+      if(i>=0){ if(arr.length>1) arr.splice(i,1); } // giữ tối thiểu 1
+      else arr.push(id);
+      renderChips(containerId, bank, selKey); save();
+    });
+  });
+}
+function renderCount(){
+  $("countBtns").innerHTML = [3,4,5,6].map(n=>`<button class="count-btn ${state.sceneCount===n?'on':''}" data-n="${n}">${n}</button>`).join('');
+  $("countBtns").querySelectorAll('.count-btn').forEach(b=>{
+    b.addEventListener('click',()=>{ state.sceneCount=+b.dataset.n; renderCount(); save(); });
+  });
+  $("countMeta").textContent = `${state.sceneCount} cảnh × ~10s ≈ ${state.sceneCount*10}s tổng`;
+  renderStrip();
+}
+function renderStrip(){
+  const plan = BEAT_PLANS[state.sceneCount];
+  $("strip").innerHTML = plan.map((b,i)=>{
+    const m = BEAT_META[b];
+    return `<div class="cell" style="background:${m.tint}">
+      <span class="n">S${i+1}</span>
+      <span class="bn">${m.vi}</span>
+      <span class="sec">~10s</span>
+    </div>`;
+  }).join('');
+}
+function renderProvider(){
+  $("providerSeg").innerHTML = Object.entries(PROVIDERS).map(([k,p])=>`
+    <label class="seg-opt ${state.provider===k?'on':''}" data-id="${k}">
+      <input type="radio" name="prov" value="${k}" ${state.provider===k?'checked':''}>
+      <span class="t">${p.name}</span>
+    </label>`).join('');
+  $("providerSeg").querySelectorAll('.seg-opt').forEach(el=>{
+    el.addEventListener('click',()=>{ state.provider=el.dataset.id; renderProvider(); syncProviderInputs(); save(); });
+  });
+  syncProviderInputs();
+}
+function syncProviderInputs(){
+  const p = PROVIDERS[state.provider];
+  $("model").value = state.models[state.provider] || p.defaultModel;
+  $("modelList").innerHTML = p.models.map(m=>`<option value="${m}">`).join('');
+  $("apikey").value = state.keys[state.provider] || "";
+  $("providerNote").innerHTML = p.note;
+}
+
+$("note").value = state.note;
+$("note").addEventListener('input', e=>{ state.note=e.target.value; save(); });
+$("model").addEventListener('input', e=>{ state.models[state.provider]=e.target.value.trim(); save(); });
+$("apikey").addEventListener('input', e=>{ state.keys[state.provider]=e.target.value; save(); });
+$("remember").checked = state.remember;
+$("remember").addEventListener('change', e=>{ state.remember=e.target.checked; save(); });
+$("keyToggle").addEventListener('click',()=>{
+  const el=$("apikey");
+  if(el.type==="password"){ el.type="text"; $("keyToggle").textContent="Ẩn"; }
+  else { el.type="password"; $("keyToggle").textContent="Hiện"; }
+});
+$("resetBtn").addEventListener('click',()=>{
+  localStorage.removeItem(LS);
+  $("apikey").value=""; state.keys={gemini:"",openai:"",claude:""};
+  state.remember=false; $("remember").checked=false;
+  setStatus("Đã xoá dữ liệu lưu trong trình duyệt.");
+});
+
+renderThumbs();
+renderChips("hookChips", HOOKS, "hooks");
+renderChips("proofChips", PROOFS, "proofs");
+renderChips("ctaChips", CTAS, "ctas");
+renderCount();
+renderProvider();
+
+/* =====================================================================
+   PROMPT BUILDING
+   ===================================================================== */
+function picked(bank, ids){ return ids.map(id => bank.find(o=>o.id===id)).filter(Boolean); }
+
+function buildSystemPrompt(){
+  return [
+"You are a senior short-form video prompt engineer for viral Thai UGC cosmetics reviews (glass-skin niche).",
+"Your job: turn the user's chosen variables into a scene array for Google Flow / Veo, where 1 scene = 1 clip (~10s).",
+"",
+"## FIXED GLOBAL STYLE (apply to every scene unless a field is overridden):",
+JSON.stringify(GLOBAL_STYLE, null, 2),
+"",
+"## VOCABULARY BANK (reuse these keywords in the visual fields):",
+JSON.stringify(VOCAB, null, 2),
+"",
+"## PER-SCENE OUTPUT SCHEMA (each scene object MUST contain exactly these fields):",
+JSON.stringify(SCENE_SCHEMA, null, 2),
+"Allowed enums — beat: Hook|Authenticity|Proof|SensoryDemo|Offer_CTA ; camera.shot_type: ECU|CU|MCU|MS ; camera.angle: eye-level|slight-low|45-degree|profile ; camera.movement: static|push-in|subtle drift|handheld-jitter ; transition_to_next: hard-cut|jump-cut.",
+"",
+"## GOLD-STANDARD EXAMPLE of one filled scene:",
+JSON.stringify(EXAMPLE_SCENE, null, 2),
+"",
+"## HARD RULES:",
+"- Output the EXACT number of scenes requested, in order, following the provided beat_plan (scene i gets beat_plan[i]).",
+"- Each scene duration_seconds ≈ 10 (may vary 8–12); scene_id is 1-based sequential.",
+"- Visual/technical fields (subject, action, setting, camera, lighting, color_palette, style_mood, purpose) in ENGLISH.",
+"- audio.voiceover_th and on_screen_text.content_th MUST be natural, fluent THAI (real dialogue a Thai creator would say), matching the beat.",
+"- The PRODUCT is defined by the user (name + description + optional reference images). Render its REAL appearance faithfully in every scene where it is shown — packaging shape, cap/lid, label text placement, texture and color — based on the images if provided, otherwise the description. Never substitute a different product. If reference images are attached, treat them as the ground truth for how the product looks.",
+"- Distribute the user's SELECTED hooks/proofs/ctas across the matching beats. If several hooks are selected, combine them in the Hook scene (like the negative-warning + age-contrast example). If multiple proof scenes exist, spread the selected proofs; if only one, combine them.",
+"- Always preserve the mandatory content even when scene count is small: a stop-scroll hook, at least one proof, a sensory application demo (thoa/vỗ da khoe texture), and a CTA/urgency. Fold missing beats' content into adjacent scenes when there is no dedicated scene for them.",
+"- Keep it photorealistic UGC (no heavy beauty filter), warm tone, ring-light dewy glass skin, fast jump-cuts, female Thai voiceover.",
+"",
+"## RESPONSE FORMAT — return ONE JSON object ONLY, no markdown fences, no commentary:",
+'{ "scenes": [ <scene objects matching the schema> ], "prose_prompt": "<readable walkthrough: one short paragraph per scene, prefixed \\"Scene N — <beat>:\\", English scene description suitable to paste/skim> " }'
+  ].join("\n");
+}
+
+function buildUserPrompt(){
+  const hks = picked(HOOKS, state.hooks);
+  const prf = picked(PROOFS, state.proofs);
+  const cta = picked(CTAS, state.ctas);
+  const plan = BEAT_PLANS[state.sceneCount];
+  const fmt = arr => arr.map(o=>`- ${o.id}: ${o.desc}`).join("\n");
+  const nImg = state.productImages.length;
+  return [
+`PRODUCT NAME: ${state.productName.trim() || "(unnamed cosmetic product)"}`,
+`PRODUCT DESCRIPTION (from user): ${state.productDesc.trim() || "(none provided — infer sensible skincare packaging)"}`,
+`PRODUCT REFERENCE IMAGES: ${nImg>0 ? nImg+" image(s) attached — use them as ground truth for the product's real look (bottle/jar, cap/lid, label, texture, color)." : "none attached — rely on the description."}`,
+"",
+"HOOKS selected (combine if >1):",
+fmt(hks),
+"",
+"PROOFS selected:",
+fmt(prf),
+"",
+"CTAS selected:",
+fmt(cta),
+"",
+`SCENE COUNT: ${state.sceneCount}  (each ~10s, total ~${state.sceneCount*10}s)`,
+`BEAT PLAN (scene → beat): ${plan.map((b,i)=>`S${i+1}=${b}`).join(", ")}`,
+state.note.trim() ? `\nEXTRA DIRECTION FROM USER: ${state.note.trim()}` : "",
+"",
+"Generate the scene array + prose_prompt now, as a single JSON object."
+  ].join("\n");
+}
+
+/* =====================================================================
+   API CALLS
+   ===================================================================== */
+async function callGemini(model, key, sys, user, images){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+  const parts = [{text:user}];
+  (images||[]).forEach(im=> parts.push({inline_data:{mime_type:im.mime, data:im.b64}}));
+  const body = {
+    systemInstruction:{parts:[{text:sys}]},
+    contents:[{role:"user", parts}],
+    generationConfig:{temperature:0.9, maxOutputTokens:8192, responseMimeType:"application/json"}
+  };
+  const r = await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const data = await r.json();
+  if(!r.ok){ throw new Error(data?.error?.message || `HTTP ${r.status}`); }
+  const outParts = data?.candidates?.[0]?.content?.parts || [];
+  const text = outParts.map(p=>p.text||"").join("");
+  if(!text) throw new Error("Phản hồi rỗng từ Gemini (có thể bị chặn safety hoặc hết token).");
+  return text;
+}
+
+async function callOpenAI(model, key, sys, user, images){
+  const isNew = /^(o\d|gpt-5)/i.test(model);
+  let userContent = user;
+  if(images && images.length){
+    userContent = [{type:"text", text:user}].concat(
+      images.map(im=>({type:"image_url", image_url:{url:`data:${im.mime};base64,${im.b64}`}}))
+    );
+  }
+  const body = { model, messages:[{role:"system",content:sys},{role:"user",content:userContent}], response_format:{type:"json_object"} };
+  if(isNew){ body.max_completion_tokens = 8000; }
+  else { body.max_tokens = 8000; body.temperature = 0.85; }
+  const r = await fetch("https://api.openai.com/v1/chat/completions",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+    body:JSON.stringify(body)
+  });
+  const data = await r.json();
+  if(!r.ok){ throw new Error(data?.error?.message || `HTTP ${r.status}`); }
+  const text = data?.choices?.[0]?.message?.content;
+  if(!text) throw new Error("Phản hồi rỗng từ OpenAI.");
+  return text;
+}
+
+async function callClaude(model, key, sys, user, images){
+  const content = [{type:"text", text:user}];
+  (images||[]).forEach(im=> content.push({type:"image", source:{type:"base64", media_type:im.mime, data:im.b64}}));
+  const r = await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "x-api-key":key,
+      "anthropic-version":"2023-06-01",
+      "anthropic-dangerous-direct-browser-access":"true"
+    },
+    body:JSON.stringify({
+      model, max_tokens:8000, system:sys,
+      messages:[{role:"user", content}]
+    })
+  });
+  const data = await r.json();
+  if(!r.ok){ throw new Error(data?.error?.message || `HTTP ${r.status}`); }
+  const text = (data?.content||[]).map(b=>b.type==="text"?b.text:"").join("");
+  if(!text) throw new Error("Phản hồi rỗng từ Claude.");
+  return text;
+}
+
+/* =====================================================================
+   PARSE + RENDER OUTPUT
+   ===================================================================== */
+function extractJson(text){
+  let t = (text||"").trim();
+  t = t.replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"").trim();
+  try{ return JSON.parse(t); }catch(e){}
+  const s=t.indexOf("{"), e=t.lastIndexOf("}");
+  if(s>=0 && e>s){ try{ return JSON.parse(t.slice(s,e+1)); }catch(_){} }
+  throw new Error("Không parse được JSON từ phản hồi của model. Thử lại hoặc đổi model.");
+}
+function proseFromScenes(scenes){
+  return scenes.map(sc=>{
+    const cam = sc.camera||{};
+    return `Scene ${sc.scene_id} — ${sc.beat} (~${sc.duration_seconds||10}s):
+${sc.subject||""}. ${sc.action||""} Setting: ${sc.setting||""}. Camera: ${cam.shot_type||""}, ${cam.angle||""}, ${cam.movement||""}. Lighting: ${sc.lighting||""}. Palette: ${sc.color_palette||""}. Mood: ${sc.style_mood||""}. On-screen (TH): "${sc.on_screen_text?.content_th||""}". Voiceover (TH): "${sc.audio?.voiceover_th||""}". Transition: ${sc.transition_to_next||"jump-cut"}.`;
+  }).join("\n\n");
+}
+
+let currentJson="", currentProse="";
+function renderOutput(env){
+  const scenes = Array.isArray(env?.scenes) ? env.scenes : (Array.isArray(env) ? env : null);
+  if(!scenes) throw new Error("Model không trả về mảng 'scenes'. Thử lại.");
+  currentJson = JSON.stringify(scenes, null, 2);
+  currentProse = (env && typeof env.prose_prompt==="string" && env.prose_prompt.trim()) ? env.prose_prompt.trim() : proseFromScenes(scenes);
+  $("jsonOut").textContent = currentJson;
+  // đánh dấu chữ Thái để render đúng font (nhẹ nhàng, không đổi nội dung)
+  $("proseOut").innerHTML = currentProse.replace(/[\u0E00-\u0E7F]+(?:[\s\u0E00-\u0E7F]*[\u0E00-\u0E7F])?/g, m=>`<span class="th">${m}</span>`);
+  $("output").classList.add("show");
+  $("output").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+/* =====================================================================
+   ORCHESTRATION
+   ===================================================================== */
+function setStatus(msg){ $("goStatus").textContent = msg||""; }
+function showError(msg){ const p=$("errPanel"); p.innerHTML=msg; p.classList.add("show"); }
+function clearError(){ $("errPanel").classList.remove("show"); }
+function busy(on){
+  $("goBtn").disabled=on;
+  $("goSpin").style.display=on?"inline-block":"none";
+  $("goLabel").textContent=on?"Đang sinh…":"Sinh prompt";
+}
+
+$("goBtn").addEventListener("click", async ()=>{
+  clearError();
+  const model=($("model").value||"").trim();
+  const key=$("apikey").value.trim();
+  if(!state.productName.trim() && !state.productDesc.trim() && state.productImages.length===0){
+    showError("<strong>Chưa có sản phẩm.</strong> Nhập ít nhất tên sản phẩm (hoặc mô tả / ảnh) để model biết cần dựng gì."); return;
+  }
+  if(!state.productName.trim()){ showError("<strong>Thiếu tên sản phẩm.</strong> Nhập tên ở mục 02."); return; }
+  if(!model){ showError("<strong>Thiếu model.</strong> Nhập tên model cho provider đã chọn."); return; }
+  if(!key){ showError("<strong>Thiếu API key.</strong> Dán key của provider bạn chọn (key chỉ nằm ở máy bạn)."); return; }
+  state.models[state.provider]=model; state.keys[state.provider]=key; save();
+
+  const images=state.productImages;
+  busy(true); setStatus(`Gọi ${PROVIDERS[state.provider].name}…${images.length?` (kèm ${images.length} ảnh)`:""}`);
+  try{
+    const sys=buildSystemPrompt(), user=buildUserPrompt();
+    let raw;
+    if(state.provider==="gemini") raw=await callGemini(model,key,sys,user,images);
+    else if(state.provider==="openai") raw=await callOpenAI(model,key,sys,user,images);
+    else raw=await callClaude(model,key,sys,user,images);
+    setStatus("Đang xử lý phản hồi…");
+    const env=extractJson(raw);
+    renderOutput(env);
+    setStatus(`Xong · ${Array.isArray(env.scenes?env.scenes:env)?.length||''} cảnh.`);
+  }catch(err){
+    let hint="";
+    const m=(err&&err.message)||String(err);
+    if(/Failed to fetch|NetworkError|CORS/i.test(m)){
+      hint="<br><span style='opacity:.85'>Nghi vấn CORS/mạng: kiểm tra kết nối; với Claude header trực-tiếp-browser đã bật sẵn. Một số key doanh nghiệp có thể chặn origin trình duyệt.</span>";
+    } else if(/api key|apikey|unauthorized|invalid|401|403|authentication/i.test(m)){
+      hint="<br><span style='opacity:.85'>Kiểm tra lại API key và quyền của key với model này.</span>";
+    } else if(/model|not found|404|does not exist/i.test(m)){
+      hint="<br><span style='opacity:.85'>Tên model có thể sai/đã đổi — thử một model khác trong gợi ý.</span>";
+    }
+    showError("<strong>Lỗi:</strong> "+m+hint);
+    setStatus("");
+  }finally{ busy(false); }
+});
+
+/* Tabs + copy */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+    t.classList.add("on");
+    const pane=t.dataset.pane;
+    $("paneJson").classList.toggle("on", pane==="json");
+    $("paneProse").classList.toggle("on", pane==="prose");
+    $("copyLabel").textContent = pane==="json" ? "Copy JSON" : "Copy prompt";
+  });
+});
+$("copyBtn").addEventListener("click", async ()=>{
+  const onJson=$("paneJson").classList.contains("on");
+  const txt=onJson?currentJson:currentProse;
+  if(!txt) return;
+  try{ await navigator.clipboard.writeText(txt); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  const lbl=$("copyLabel"); const old=lbl.textContent; lbl.textContent="Đã copy ✓";
+  setTimeout(()=>lbl.textContent=old,1400);
+});
+</script>
+</body>
+</html>
