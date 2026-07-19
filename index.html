@@ -205,7 +205,7 @@
     display:inline-flex;align-items:center;gap:7px;transition:all .12s;
   }
   .copy-btn:hover{border-color:var(--honey);background:var(--honey-wash);}
-  .th{font-family:"Noto Sans Thai","IBM Plex Mono",monospace;}
+  .th{font-family:"Noto Sans Thai","Noto Sans",system-ui,-apple-system,"Segoe UI",sans-serif;}
 
   /* scene cards */
   .scene{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;background:#fff;}
@@ -223,7 +223,7 @@
   }
   .scene-copy:hover{border-color:var(--honey);background:var(--honey-wash);}
   .scene-prompt{
-    margin:0;padding:14px;font-family:"Noto Sans Thai","IBM Plex Mono",monospace;
+    margin:0;padding:14px;font-family:"IBM Plex Mono","Noto Sans Thai","Noto Sans",system-ui,monospace;
     font-size:12.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word;
     max-height:340px;overflow:auto;background:#FEFCF8;
   }
@@ -458,8 +458,10 @@ const REALISM_DIRECTIVE = [
   "Include real-camera cues: natural handheld shake, subtle auto-exposure/white-balance shifts, occasional focus hunt, light lens smudge/flare, faint sensor noise, real motion blur, imperfect off-center framing.",
   "Render realistic human skin: visible pores, natural texture and subtle imperfections, real specular sweat/dew — NOT airbrushed, NOT waxy, NOT plastic CGI skin (this is a rendering-quality cue, applied to whoever the reference person is).",
   "Natural performance: relaxed micro-expressions, real blinks, natural eye darts, accurate Thai lip-sync to the spoken dialogue, small spontaneous gestures while talking.",
-  "AVOID (state as negatives in the prompt): AI look, uncanny/waxy skin, over-smoothing, morphing face, extra fingers, warping product/label/text, flicker, plastic sheen, cinematic color grade, slow-mo, perfect studio lighting.",
-  "REFERENCE LOCK (critical): the on-screen person AND the product are both provided as REFERENCE IMAGES inside the video tool (Google Flow), which locks their exact appearance. Therefore DO NOT describe or invent the character's physical features (age, face, hair, skin tone, marks, wardrobe) or the product's packaging/color/label/shape. Instead refer to them as \"the reference character\" and \"the reference product\", and instruct that they must MATCH the reference images EXACTLY and stay identical in every scene. Only describe pose, expression, action, and how the character interacts with the product."
+  "AVOID (state as negatives in the prompt): AI look, uncanny/waxy skin, over-smoothing, morphing face, extra fingers, warping product/label/text, flicker, plastic sheen, cinematic color grade, slow-mo, perfect studio lighting, AND any on-screen text/captions/subtitles/titles/overlays/watermarks/logos.",
+  "REFERENCE LOCK (critical): the on-screen person AND the product are both provided as REFERENCE IMAGES inside the video tool (Google Flow), which locks their exact appearance. Therefore DO NOT describe or invent the character's physical features (age, face, hair, skin tone, marks, wardrobe) or the product's packaging/color/label/shape. Instead refer to them as \"the reference character\" and \"the reference product\", and instruct that they must MATCH the reference images EXACTLY and stay identical in every scene. Only describe pose, expression, action, and how the character interacts with the product.",
+  "SETTING LOCK (critical): decide ONE setting in scene 1 — the room, background, props, furniture layout and lighting — then repeat that SAME setting description, essentially word-for-word, in the setting field and veo_prompt of EVERY later scene. The environment must be absolutely identical across all scenes; only the character's pose/action and the camera framing may change. Never move to a new room or change the background/props between scenes.",
+  "NO ON-SCREEN TEXT (critical): the final video must contain NO on-screen text of any kind — no captions, subtitles, titles, overlays, watermarks, logos or graphic text. Everything is communicated only through spoken dialogue and action. Set on_screen_text.content_th to an empty string and add an explicit no-text negative to every veo_prompt."
 ].join("\n");
 
 const HOOKS = [
@@ -501,16 +503,16 @@ const SCENE_SCHEMA = {
   duration_seconds:"number (~10)",
   subject:"string — refer to 'the reference character' (identity locked by the uploaded reference image). Describe ONLY pose, expression and demeanor, NEVER physical features/hair/skin/wardrobe.",
   action:"string (continuous physical action performed WHILE speaking; interactions use 'the reference product')",
-  setting:"string (consistent room, background, props)",
+  setting:"string — the ONE locked setting; MUST be identical (word-for-word) in every scene (room, background, props, layout, lighting)",
   camera:{shot_type:"ECU | CU | MCU | MS", angle:"eye-level | slight-low | 45-degree | profile", movement:"static | push-in | subtle drift | handheld-jitter"},
   lighting:"string",
   color_palette:"string",
   style_mood:"string (keywords)",
-  on_screen_text:{content_th:"string (Thai)", position:"string", style:"string"},
-  audio:{voiceover_th:"string — CONTINUOUS natural Thai monologue, ~duration×4.3 words (≈43 words for a 10s clip), spoken fast while acting, no dead air", tone:"string", sfx:"string|none", bgm:"string|none"},
+  on_screen_text:{content_th:"MUST be empty string \"\" — no on-screen text anywhere", position:"none", style:"none"},
+  audio:{voiceover_th:"string — CONTINUOUS natural monologue in the LOCALIZED language of the product's market (detected from the product name; the _th key is legacy, use the correct native language), ~duration×4.3 words, spoken fast while acting, no dead air", tone:"string", sfx:"string|none", bgm:"string|none"},
   transition_to_next:"hard-cut | jump-cut",
   purpose:"string (role in the 5-beat structure)",
-  veo_prompt:"string — SELF-CONTAINED English text prompt for THIS one ~10s clip, ready to paste into Veo/Flow. Bundle: 'the reference character' + 'the reference product' (MUST match the reference images exactly, no invented features) + pose/action + setting + camera + lighting + realism cues + negatives + the exact Thai dialogue to speak (in quotes) + on-screen Thai text. HARD LIMIT: under 3800 characters."
+  veo_prompt:"string — SELF-CONTAINED English text prompt for THIS one clip, ready to paste into Veo/Flow. Bundle: 'the reference character' + 'the reference product' (MUST match the reference images exactly, no invented features) + pose/action + the SAME locked setting (identical every scene) + camera + lighting + realism cues + negatives (INCLUDING no on-screen text/captions/overlays/watermark) + the exact localized dialogue to speak (in quotes). Do NOT include any on-screen text. HARD LIMIT: under 3800 characters."
 };
 
 const VEO_MAX = 4000, VEO_TARGET = 3800; // trần ký tự mỗi prompt cảnh
@@ -525,11 +527,11 @@ const EXAMPLE_SCENE = {
   lighting:"real ring light + warm room lamp mix, circular catchlight in pupils, believable dewy specular, natural falloff",
   color_palette:"raw phone color, warm tone, beige background, slight shadow noise",
   style_mood:"authentic amateur UGC, cozy, sisterly, high-energy, real not cinematic",
-  on_screen_text:{content_th:"อายุ 37 ปี แต่ผิวยังเด้ง! / [PIP รูปเก่า อายุ 34]", position:"chest area + small top-left overlay photo", style:"bold rounded white font, colored outline"},
+  on_screen_text:{content_th:"", position:"none", style:"none"},
   audio:{voiceover_th:"เดี๋ยวๆ ใครกำลังจะกดสั่งน้ำตบตัวนี้ ฟังก่อนนะคะ! คือเราอายุ 37 แล้วนะ แต่คนทักตลอดว่าทำไมผิวยังเด้งยังฉ่ำอยู่เลย บอกเลยว่าลับๆ อยู่ที่ขวดนี้แหละค่ะ ตบปุ๊บซึมปั๊บ หน้าฉ่ำวิ้งเหมือนกระจกเลย ดูสิๆ นี่ไม่ได้ใช้ฟิลเตอร์เลยนะ ของจริงล้วนๆ", tone:"fast, playful-warning, high-pitch, ~43 words in 10s", sfx:"none", bgm:"none"},
   transition_to_next:"jump-cut",
   purpose:"10-second stop-scroll hook: negative-warning + age-contrast, dialogue runs the full clip while she demos dewy skin",
-  veo_prompt:"Hyper-realistic vertical 9:16 selfie video, indistinguishable from real handheld footage shot on a phone front camera by a normal person. The on-screen person is THE REFERENCE CHARACTER and must match the reference image exactly (do not alter or invent her face, hair, skin or wardrobe). The product is THE REFERENCE PRODUCT (an essence bottle) and must match the product reference image exactly (do not redesign packaging, label or color). She holds the reference product upside down near her forehead, a clear viscous drop slides down her cheek, she dabs it with two fingertips and keeps talking fast to camera with a playful warning face. Setting: cozy bedroom, white wooden door and grey bedding softly blurred, warm corner lamp. Camera: arm's-length handheld MCU, eye-level, organic shake, slight auto-exposure shift, mild focus hunt, faint lens smudge, natural motion blur. Lighting: ring light + warm room lamp, catchlight in pupils, believable dewy specular, natural falloff. Color: raw unfiltered phone color, warm tone, slight shadow noise, no beauty filter, no cinematic grade. Realistic human skin texture with visible pores, natural blinks and micro-expressions. She speaks continuous natural fast Thai the entire 10 seconds, accurate lip-sync: \"เดี๋ยวๆ ใครกำลังจะกดสั่งน้ำตบตัวนี้ ฟังก่อนนะคะ! คือเราอายุ 37 แล้วนะ แต่คนทักตลอดว่าทำไมผิวยังเด้งยังฉ่ำอยู่เลย บอกเลยว่าลับๆ อยู่ที่ขวดนี้แหละค่ะ ตบปุ๊บซึมปั๊บ หน้าฉ่ำวิ้งเหมือนกระจกเลย ดูสิๆ นี่ไม่ได้ใช้ฟิลเตอร์เลยนะ ของจริงล้วนๆ\". Bold white Thai on-screen text with colored outline reading \"อายุ 37 ปี แต่ผิวยังเด้ง!\" over the chest, plus a small top-left overlay photo labeled age 34. Real amateur UGC energy, high-pitch. NEGATIVE: AI look, waxy or plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped bottle or label or text, flicker, slow-motion, studio perfection, teal-orange grade."
+  veo_prompt:"Hyper-realistic vertical 9:16 selfie video, indistinguishable from real handheld footage shot on a phone front camera by a normal person. The on-screen person is THE REFERENCE CHARACTER and must match the reference image exactly (do not alter or invent her face, hair, skin or wardrobe). The product is THE REFERENCE PRODUCT (an essence bottle) and must match the product reference image exactly (do not redesign packaging, label or color). She holds the reference product upside down near her forehead, a clear viscous drop slides down her cheek, she dabs it with two fingertips and keeps talking fast to camera with a playful warning face. LOCKED SETTING (identical in every scene): cozy bedroom, white wooden door and grey bedding softly blurred, warm corner lamp. Camera: arm's-length handheld MCU, eye-level, organic shake, slight auto-exposure shift, mild focus hunt, faint lens smudge, natural motion blur. Lighting: ring light + warm room lamp, catchlight in pupils, believable dewy specular, natural falloff. Color: raw unfiltered phone color, warm tone, slight shadow noise, no beauty filter, no cinematic grade. Realistic human skin texture with visible pores, natural blinks and micro-expressions. She speaks continuous natural fast Thai the entire 10 seconds, accurate lip-sync: \"เดี๋ยวๆ ใครกำลังจะกดสั่งน้ำตบตัวนี้ ฟังก่อนนะคะ! คือเราอายุ 37 แล้วนะ แต่คนทักตลอดว่าทำไมผิวยังเด้งยังฉ่ำอยู่เลย บอกเลยว่าลับๆ อยู่ที่ขวดนี้แหละค่ะ ตบปุ๊บซึมปั๊บ หน้าฉ่ำวิ้งเหมือนกระจกเลย ดูสิๆ นี่ไม่ได้ใช้ฟิลเตอร์เลยนะ ของจริงล้วนๆ\". Real amateur UGC energy, high-pitch. NEGATIVE: any on-screen text, captions, subtitles, titles, overlays, watermarks or logos; AI look, waxy or plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped bottle or label, flicker, slow-motion, studio perfection, teal-orange grade."
 };
 
 // beat metadata
@@ -783,10 +785,22 @@ renderProvider();
    ===================================================================== */
 function picked(bank, ids){ return ids.map(id => bank.find(o=>o.id===id)).filter(Boolean); }
 
+// Đoán ngôn ngữ theo chữ viết của tên sản phẩm (gợi ý cho model, model có thể tự quyết)
+function guessLang(name, desc){
+  const s = (name||"") + " " + (desc||"");
+  if(/[\u0E00-\u0E7F]/.test(s)) return "Thai";
+  if(/[\uAC00-\uD7A3\u1100-\u11FF]/.test(s)) return "Korean";
+  if(/[\u3040-\u30FF]/.test(s)) return "Japanese";
+  if(/[\u4E00-\u9FFF]/.test(s)) return "Chinese";
+  // tiếng Việt: chữ Latin có dấu/ký tự đặc trưng
+  if(/[ăâđêôơưĂÂĐÊÔƠƯ]/.test(s) || /[àáảãạằắẳẵặầấẩẫậèéẻẽẹềếểễệìíỉĩịòóỏõọồốổỗộờớởỡợùúủũụừứửữựỳýỷỹỵ]/i.test(s)) return "Vietnamese";
+  return ""; // không rõ → để model tự suy từ mô tả/ghi chú
+}
+
 function buildSystemPrompt(){
   return [
-"You are a senior short-form video prompt engineer for viral Thai UGC cosmetics reviews (glass-skin niche).",
-"Your job: turn the user's chosen variables into a scene array for Google Flow / Veo, where 1 scene = 1 clip (~10s).",
+"You are a senior short-form video prompt engineer for viral UGC cosmetics reviews in the Thai-style glass-skin niche (this refers to the VISUAL/editing style; the spoken language is localized per the LANGUAGE rule below).",
+"Your job: turn the user's chosen variables into a scene array for Google Flow / Veo, where 1 scene = 1 clip.",
 "",
 "## FIXED GLOBAL STYLE (apply to every scene unless a field is overridden):",
 JSON.stringify(GLOBAL_STYLE, null, 2),
@@ -808,13 +822,16 @@ JSON.stringify(EXAMPLE_SCENE, null, 2),
 "- Output the EXACT number of scenes requested, in order, following the provided beat_plan (scene i gets beat_plan[i]).",
 "- Each scene duration_seconds = the requested SCENE DURATION; scene_id is 1-based sequential.",
 "- Visual/technical fields (subject, action, setting, camera, lighting, color_palette, style_mood, purpose) in ENGLISH.",
-"- DIALOGUE LENGTH: audio.voiceover_th MUST be a CONTINUOUS natural Thai monologue long enough to fill the whole clip at ~4.3 words/second → about duration_seconds × 4.3 words (≈43 words for a 10s clip). No short lines, no dead air. The speaker talks the entire clip WHILE performing the action (natural, spoken, casual register with real filler words). on_screen_text.content_th is separate, short punchy Thai.",
-"- REALISM: every scene must read as authentic real-person handheld footage — apply the REALISM DIRECTIVE above (real-camera cues, real skin texture, natural performance, accurate Thai lip-sync, explicit negatives).",
-"- REFERENCE LOCK: the character and the product are locked by REFERENCE IMAGES in the video tool. Do NOT describe or invent the character's physical features/hair/skin/wardrobe, and do NOT redesign the product's packaging/label/color. Always call them 'the reference character' and 'the reference product', and state they must match the reference images exactly and stay identical across all scenes. Describe only pose, expression, action and product interaction. Keep the room/setting/lighting consistent across scenes.",
+"- DIALOGUE LENGTH & PACE: audio.voiceover_th MUST be a CONTINUOUS natural monologue long enough to fill the whole clip at ~4.3 words/second → about duration_seconds × 4.3 words. No short lines, no dead air. The speaker talks the entire clip WHILE performing the action (natural, spoken, casual register with real filler words).",
+"- LANGUAGE (localization): detect the target-market language from the PRODUCT NAME the user typed (its script/language) — Thai script → Thai, Vietnamese → Vietnamese, Korean/Hangul → Korean, Japanese/kana → Japanese, Chinese → Chinese, and so on. If the product name is in Latin script or ambiguous, infer from the product description, then the user's note; final fallback Thai. Write ALL spoken dialogue (voiceover_th) in that native language, and state the spoken language explicitly inside each veo_prompt (e.g., 'speaks continuous natural fast Vietnamese'). Keep the JSON key audio.voiceover_th unchanged even when the language is not Thai.",
+"- SETTING LOCK: choose ONE setting in scene 1 (room, background, props, layout, lighting) and repeat that SAME setting description word-for-word in the setting field AND veo_prompt of EVERY subsequent scene. The environment must be absolutely identical across all scenes; only pose/action and camera framing may change. Never change room/background/props between scenes.",
+"- NO ON-SCREEN TEXT: the video must have NO on-screen text, captions, subtitles, titles, overlays, watermarks or logos of any kind. Set on_screen_text.content_th to an empty string \"\", and include an explicit negative such as 'no on-screen text, no captions, no subtitles, no overlays, no watermark, no logos' in every veo_prompt.",
+"- REALISM: every scene must read as authentic real-person handheld footage — apply the REALISM DIRECTIVE above (real-camera cues, real skin texture, natural performance, accurate lip-sync, explicit negatives).",
+"- REFERENCE LOCK: the character and the product are locked by REFERENCE IMAGES in the video tool. Do NOT describe or invent the character's physical features/hair/skin/wardrobe, and do NOT redesign the product's packaging/label/color. Always call them 'the reference character' and 'the reference product', and state they must match the reference images exactly and stay identical across all scenes. Describe only pose, expression, action and product interaction.",
 "- The user provides a product name + description (and maybe images) only for CONTEXT so you know what the product is and how it is used (bottle vs jar vs tube, how to apply it) — use that to write correct actions, but never override the visual with invented packaging details; the reference image is the source of truth for how it looks.",
 "- Distribute the user's SELECTED hooks/proofs/ctas across the matching beats. If several hooks are selected, combine them in the Hook scene. If multiple proof scenes exist, spread the selected proofs; if only one, combine them.",
 "- Always preserve mandatory content: a stop-scroll hook, at least one proof, a sensory application demo, and a CTA/urgency. Fold missing beats into adjacent scenes when there is no dedicated scene.",
-"- VEO PROMPT PER SCENE: fill veo_prompt = one self-contained English clip prompt bundling 'the reference character' + 'the reference product' (must match the reference images exactly, no invented features) + pose/action + setting + camera + lighting + realism cues + negatives + the exact Thai dialogue (in quotes, verbatim same as voiceover_th) + the on-screen Thai text. It must be pasteable alone into Veo/Flow. HARD CHARACTER LIMIT: veo_prompt MUST be under 3800 characters (never exceed 4000). Be rich but concise; if near the limit, trim adjectives, not the dialogue.",
+"- VEO PROMPT PER SCENE: fill veo_prompt = one self-contained English clip prompt bundling 'the reference character' + 'the reference product' (must match the reference images exactly, no invented features) + pose/action + the SAME locked setting (identical every scene) + camera + lighting + realism cues + negatives (INCLUDING no on-screen text/captions/overlays/watermark) + the exact localized dialogue (in quotes, verbatim same as voiceover_th, stating the spoken language). Do NOT put any text on screen. It must be pasteable alone into Veo/Flow. HARD CHARACTER LIMIT: veo_prompt MUST be under 3800 characters (never exceed 4000). Be rich but concise; if near the limit, trim adjectives, not the dialogue.",
 "",
 "## RESPONSE FORMAT — return ONE JSON object ONLY, no markdown fences, no commentary:",
 '{ "scenes": [ <scene objects matching the schema, each including a valid veo_prompt under 3800 chars> ] }'
@@ -828,9 +845,11 @@ function buildUserPrompt(){
   const plan = BEAT_PLANS[state.sceneCount];
   const fmt = arr => arr.map(o=>`- ${o.id}: ${o.desc}`).join("\n");
   const nImg = state.productImages.length;
+  const langGuess = guessLang(state.productName, state.productDesc);
   return [
 `PRODUCT NAME (context only): ${state.productName.trim() || "(unnamed cosmetic product)"}`,
 `PRODUCT DESCRIPTION (context only, for correct usage/action — NOT for inventing looks): ${state.productDesc.trim() || "(none provided)"}`,
+`DIALOGUE LANGUAGE: ${langGuess ? `the product name looks like ${langGuess} → write ALL spoken dialogue in ${langGuess}.` : "detect the language from the product name's script; if Latin/ambiguous, infer from the description/note; final fallback Thai."} State the spoken language inside each veo_prompt. Keep the JSON key audio.voiceover_th unchanged.`,
 `PRODUCT & CHARACTER APPEARANCE: locked by reference images in the video tool (Tool 2 / Google Flow). Refer to them as 'the reference character' and 'the reference product'; do NOT describe the character's features or redesign the product — they must match the reference images exactly in every scene.`,
 "",
 "HOOKS selected (combine if >1):",
@@ -845,7 +864,9 @@ fmt(cta),
 `SCENE COUNT: ${state.sceneCount}  (each ~${state.sceneDuration}s, total ~${state.sceneCount*state.sceneDuration}s)`,
 `BEAT PLAN (scene → beat): ${plan.map((b,i)=>`S${i+1}=${b}`).join(", ")}`,
 `SCENE DURATION: set every scene's duration_seconds = ${state.sceneDuration}.`,
-`DIALOGUE TARGET: ~${Math.round(state.sceneDuration*4.3)} Thai words per scene (${state.sceneDuration}s × 4.3 words/sec), continuous, spoken while acting, no dead air.`,
+`DIALOGUE TARGET: ~${Math.round(state.sceneDuration*4.3)} words per scene (${state.sceneDuration}s × 4.3 words/sec) in the localized language, continuous, spoken while acting, no dead air.`,
+`SETTING LOCK: describe the setting once and keep it ABSOLUTELY IDENTICAL (word-for-word) in every scene — same room, background, props, layout and lighting. Only pose/action and camera framing change.`,
+`NO ON-SCREEN TEXT: no captions, subtitles, titles, overlays, watermarks or logos anywhere; on_screen_text.content_th must be "" and each veo_prompt must include a no-text negative.`,
 `REALISM: must look 1:1 like real handheld phone footage; keep 'the reference character' and 'the reference product' identical across scenes (from reference images); include real-camera + real-skin cues and explicit negatives in each veo_prompt.`,
 `Each veo_prompt MUST stay under 3800 characters.`,
 state.note.trim() ? `\nEXTRA DIRECTION FROM USER: ${state.note.trim()}` : "",
@@ -940,19 +961,18 @@ async function copyText(text, labelEl){
 }
 // Dựng veo_prompt từ các trường nếu model quên trả veo_prompt
 function veoFromScene(sc){
-  const cam=sc.camera||{}, ost=sc.on_screen_text||{}, au=sc.audio||{};
+  const cam=sc.camera||{}, au=sc.audio||{};
   return [
     "Hyper-realistic vertical 9:16 selfie video, indistinguishable from real handheld phone footage (not AI, not cinematic).",
     "The on-screen person is THE REFERENCE CHARACTER and must match the reference image exactly (do not alter or invent her appearance). The product is THE REFERENCE PRODUCT and must match the product reference image exactly (do not redesign packaging/label/color).",
     sc.subject ? `Performance: ${sc.subject}.` : "",
     `Action: ${sc.action||""}.`,
-    `Setting: ${sc.setting||""}.`,
+    `Locked setting (identical in every scene): ${sc.setting||""}.`,
     `Camera: ${cam.shot_type||""} ${cam.angle||""} ${cam.movement||""}, arm's-length handheld, organic shake, auto-exposure/white-balance shifts, mild focus hunt, natural motion blur.`,
     `Lighting: ${sc.lighting||""}. Color: ${sc.color_palette||""}, raw unfiltered phone color, no beauty filter.`,
-    "Realistic human skin texture with visible pores, natural blinks and micro-expressions, accurate Thai lip-sync.",
-    au.voiceover_th ? `She speaks continuous natural fast Thai for the whole ~${sc.duration_seconds||10}s: "${au.voiceover_th}".` : "",
-    ost.content_th ? `On-screen Thai text: "${ost.content_th}" (${ost.style||"bold white, colored outline"}).` : "",
-    "NEGATIVE: AI look, waxy/plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped product/label/text, flicker, slow-motion, studio perfection, teal-orange grade."
+    "Realistic human skin texture with visible pores, natural blinks and micro-expressions, accurate lip-sync.",
+    au.voiceover_th ? `She speaks continuous natural fast dialogue in the localized language for the whole ~${sc.duration_seconds||10}s: "${au.voiceover_th}".` : "",
+    "NEGATIVE: any on-screen text, captions, subtitles, titles, overlays, watermarks or logos; AI look, waxy/plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped product/label, flicker, slow-motion, studio perfection, teal-orange grade."
   ].filter(Boolean).join(" ");
 }
 
@@ -986,7 +1006,7 @@ function renderOutput(env){
         </button>
       </div>
       <div class="scene-prompt"></div>
-      <div class="scene-meta"><b>Thoại (TH):</b> <span class="th">${escapeHtml(sc.audio?.voiceover_th||"—")}</span></div>
+      <div class="scene-meta"><b>Thoại:</b> <span class="th">${escapeHtml(sc.audio?.voiceover_th||"—")}</span></div>
       <details class="jsonwrap"><summary>JSON cảnh này (cho Tool 2)</summary><pre class="scene-json"></pre></details>`;
     card.querySelector(".scene-prompt").textContent = prompt;
     card.querySelector(".scene-json").textContent = JSON.stringify(sc, null, 2);
