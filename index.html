@@ -131,6 +131,17 @@
   }
   .count-btn.on{border-color:var(--honey);background:var(--honey);color:#fff;}
   .count-meta{color:var(--muted);font-size:13px;}
+  /* duration slider */
+  .slider-row{display:flex;align-items:center;gap:12px;}
+  .slider-cap{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);flex:0 0 auto;}
+  #durVal{font-family:"IBM Plex Mono",monospace;color:var(--honey-deep);}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1 1 auto;height:6px;border-radius:999px;
+    background:linear-gradient(to right,var(--honey) 0%,var(--honey) 50%,var(--line-strong) 50%,var(--line-strong) 100%);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--honey);border:3px solid #fff;box-shadow:0 1px 4px rgba(38,32,43,.3);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--honey);
+    border:3px solid #fff;box-shadow:0 1px 4px rgba(38,32,43,.3);cursor:pointer;}
+  input[type=range]:focus{box-shadow:0 0 0 3px var(--honey-wash);}
 
   /* filmstrip */
   .strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin-top:4px;}
@@ -185,26 +196,46 @@
   #output{margin-top:24px;display:none;}
   #output.show{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-  .tabs{display:inline-flex;background:var(--honey-wash);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;}
-  .tab{border:none;background:none;font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-soft);
-    padding:8px 15px;border-radius:8px;cursor:pointer;transition:all .12s;}
-  .tab.on{background:#fff;color:var(--ink);box-shadow:var(--shadow);}
-  .out-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+  .out-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .out-title{font-family:"Fraunces",serif;font-weight:600;font-size:19px;}
+  .out-actions{display:flex;gap:8px;flex-wrap:wrap;}
   .copy-btn{
     font-family:inherit;font-size:12.5px;font-weight:600;color:var(--honey-deep);
     background:#fff;border:1px solid var(--line-strong);border-radius:8px;padding:8px 13px;cursor:pointer;
     display:inline-flex;align-items:center;gap:7px;transition:all .12s;
   }
   .copy-btn:hover{border-color:var(--honey);background:var(--honey-wash);}
-  pre.out{
-    background:#231C29;color:#F2E9DA;border-radius:12px;padding:18px;overflow:auto;
-    font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.6;max-height:520px;
-    border:1px solid #382E40;white-space:pre;margin:0;
-  }
-  pre.out.prose{white-space:pre-wrap;color:#EFE7DA;}
   .th{font-family:"Noto Sans Thai","IBM Plex Mono",monospace;}
-  .pane{display:none;}
-  .pane.on{display:block;}
+
+  /* scene cards */
+  .scene{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;background:#fff;}
+  .scene-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line);}
+  .scene-tag{width:10px;height:10px;border-radius:3px;flex:0 0 auto;}
+  .scene-name{font-weight:700;font-size:14px;}
+  .scene-beat{font-size:12px;color:var(--muted);font-weight:600;}
+  .scene-spacer{flex:1 1 auto;}
+  .charcount{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;background:#EEF4EF;color:var(--ok);white-space:nowrap;}
+  .charcount.over{background:var(--err-wash);color:var(--err);}
+  .scene-copy{
+    font-family:inherit;font-size:12px;font-weight:600;color:var(--honey-deep);background:#fff;
+    border:1px solid var(--line-strong);border-radius:7px;padding:6px 11px;cursor:pointer;transition:all .12s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .scene-copy:hover{border-color:var(--honey);background:var(--honey-wash);}
+  .scene-prompt{
+    margin:0;padding:14px;font-family:"Noto Sans Thai","IBM Plex Mono",monospace;
+    font-size:12.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word;
+    max-height:340px;overflow:auto;background:#FEFCF8;
+  }
+  .scene-meta{padding:0 14px 12px;font-size:12px;color:var(--muted);line-height:1.5;}
+  .scene-meta b{color:var(--ink-soft);font-weight:600;}
+  details.jsonwrap{border-top:1px solid var(--line);}
+  details.jsonwrap summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--honey-deep);padding:10px 14px;list-style:none;}
+  details.jsonwrap summary::-webkit-details-marker{display:none;}
+  details.jsonwrap summary::before{content:"▸ ";}
+  details.jsonwrap[open] summary::before{content:"▾ ";}
+  pre.scene-json{margin:0;padding:14px;background:#231C29;color:#F2E9DA;border-radius:0;
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.55;white-space:pre;overflow:auto;max-height:320px;}
 
   /* error / info */
   .panel{border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.55;margin-top:16px;}
@@ -255,7 +286,7 @@
   <div class="inner">
     <span class="eyebrow"><span class="dot"></span>Tool 1 · Xưởng viết prompt</span>
     <h1>Ráp <em>scene</em> cho video review mỹ phẩm viral</h1>
-    <p class="lede">Chọn 4 biến số theo công thức 5 nhịp, tool gọi API AI để sinh mảng scene đúng schema (ghép trên Google&nbsp;Flow / Veo) kèm bản prompt văn xuôi.</p>
+    <p class="lede">Nhập sản phẩm + chọn Hook/Proof/CTA theo công thức 5 nhịp. Tool gọi API AI sinh <em>prompt siêu thực</em> cho từng cảnh ~10s (giống video quay thật), copy riêng từng cảnh để ghép trên Google&nbsp;Flow / Veo.</p>
   </div>
 </header>
 
@@ -293,7 +324,7 @@
     </div>
 
     <div class="field">
-      <label class="field-label">Ảnh sản phẩm <span style="font-weight:400;color:var(--muted)">(tối đa 3 · gửi kèm cho model để dựng đúng bao bì)</span></label>
+      <label class="field-label">Ảnh sản phẩm <span style="font-weight:400;color:var(--muted)">(tối đa 3 · giúp model hiểu sản phẩm; khoá hình cuối cùng làm ở Tool 2)</span></label>
       <div class="drop" id="dropZone" tabindex="0" role="button" aria-label="Tải ảnh sản phẩm">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
         <span class="drop-t">Kéo thả hoặc bấm để chọn ảnh</span>
@@ -327,9 +358,20 @@
   <!-- 3. Độ dài -->
   <section class="card">
     <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Số cảnh &amp; độ dài</span></div>
-    <p class="sec-hint">1 cảnh = 1 clip ~10s để ghép trên Flow/Veo. Các nhịp bắt buộc (Hook · Proof · Cảm quan · CTA) luôn được đảm bảo.</p>
-    <div class="count-row">
-      <div class="count-btns" id="countBtns"></div>
+    <p class="sec-hint">1 cảnh = 1 clip để ghép trên Flow (Omni Flash ~10s/clip). Các nhịp bắt buộc (Hook · Proof · Cảm quan · CTA) luôn được đảm bảo.</p>
+    <div class="field">
+      <label class="field-label">Số cảnh</label>
+      <div class="count-row">
+        <div class="count-btns" id="countBtns"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Thời lượng mỗi cảnh: <span id="durVal">10s</span></label>
+      <div class="slider-row">
+        <span class="slider-cap">5s</span>
+        <input type="range" id="durSlider" min="5" max="15" step="1" value="10" />
+        <span class="slider-cap">15s</span>
+      </div>
       <span class="count-meta" id="countMeta"></span>
     </div>
     <div class="strip" id="strip" aria-hidden="true"></div>
@@ -371,17 +413,19 @@
   <!-- Output -->
   <section class="card" id="output">
     <div class="out-head">
-      <div class="tabs">
-        <button class="tab on" data-pane="json">Mảng scene (JSON)</button>
-        <button class="tab" data-pane="prose">Prompt văn xuôi</button>
+      <div class="out-title">Kết quả · <span id="sceneCountOut">0</span> cảnh</div>
+      <div class="out-actions">
+        <button class="copy-btn" id="copyAllBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <span>Copy toàn bộ prompt</span>
+        </button>
+        <button class="copy-btn" id="copyJsonBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H6a2 2 0 0 0-2 2v3M16 3h2a2 2 0 0 1 2 2v3M8 21H6a2 2 0 0 1-2-2v-3M16 21h2a2 2 0 0 0 2-2v-3"/></svg>
+          <span>Copy JSON (mảng)</span>
+        </button>
       </div>
-      <button class="copy-btn" id="copyBtn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-        <span id="copyLabel">Copy JSON</span>
-      </button>
     </div>
-    <div class="pane on" id="paneJson"><pre class="out" id="jsonOut"></pre></div>
-    <div class="pane" id="paneProse"><pre class="out prose" id="proseOut"></pre></div>
+    <div id="scenes"></div>
   </section>
 
   <footer class="foot">
@@ -398,15 +442,25 @@
    ===================================================================== */
 const GLOBAL_STYLE = {
   format:"vertical 9:16, short-form UGC skincare review, 30-60s",
-  render_style:"ultra-photorealistic, shot on high-end smartphone front camera, 4k, visible natural skin pores, real dewy shine, NO heavy beauty filter",
-  camera_base:"handheld with subtle organic micro-jitter, 35mm-equivalent, shallow depth of field, static framing with occasional mechanical push-in when product moves toward lens",
-  lighting_base:"high-key soft frontal ring light, circular catchlight in pupils, strong specular highlights on cheekbones/nose/forehead to sell wet glass-skin texture, minimal shadow",
-  color_base:"warm tone, natural saturation, healthy peach skin tones, raw smartphone color profile (avoid cinematic teal-orange)",
-  editing_base:"fast jump-cuts every 2-4s, hard cuts only, no fancy transitions, cut on subject's motion to keep speech continuous",
-  audio_base:"original Thai female voiceover, high-pitch, fast pace ~1.3-1.5x, no dead air; BGM optional (low lo-fi only for 'clinical/lab' variant)",
+  render_style:"indistinguishable from real footage shot on a real smartphone front camera by a normal person; NOT cinematic, NOT AI-looking; authentic amateur selfie-vlog realism, real human micro-imperfections",
+  camera_base:"handheld selfie, arm's-length front camera, organic hand shake and micro-drift, occasional slight reframe/refocus hunt, real phone auto-exposure and white-balance shifts, mild rolling-shutter, natural motion blur on fast moves, 26-28mm phone-wide look",
+  lighting_base:"real indoor ring light + practical room light mix, soft frontal fill, circular catchlight in pupils, believable specular highlights on dewy skin, natural falloff, not studio-perfect",
+  color_base:"raw unfiltered smartphone color, warm tone, healthy peach skin tones, natural saturation, slight sensor noise in shadows, no cinematic teal-orange grade, no beauty filter",
+  editing_base:"fast jump-cuts every 2-4s, hard cuts only, no fancy transitions, cut on subject's motion so speech stays continuous across the clip",
+  audio_base:"original fast-paced Thai female voiceover, high-pitch, casual spoken register, natural breaths and filler, no dead air; the speaker talks continuously while doing the action; BGM optional low lo-fi only",
   aspect_ratio:"9:16",
   language_on_screen:"Thai (bold white font, black or colored outline)"
 };
+
+// Độ chân thực 1:1 + khoá NHÂN VẬT & SẢN PHẨM bằng ẢNH THAM CHIẾU (Flow lo phần lock)
+const REALISM_DIRECTIVE = [
+  "GOAL: each clip must look like genuine real-person handheld footage, so a normal viewer cannot tell it is AI. Photoreal, not stylized.",
+  "Include real-camera cues: natural handheld shake, subtle auto-exposure/white-balance shifts, occasional focus hunt, light lens smudge/flare, faint sensor noise, real motion blur, imperfect off-center framing.",
+  "Render realistic human skin: visible pores, natural texture and subtle imperfections, real specular sweat/dew — NOT airbrushed, NOT waxy, NOT plastic CGI skin (this is a rendering-quality cue, applied to whoever the reference person is).",
+  "Natural performance: relaxed micro-expressions, real blinks, natural eye darts, accurate Thai lip-sync to the spoken dialogue, small spontaneous gestures while talking.",
+  "AVOID (state as negatives in the prompt): AI look, uncanny/waxy skin, over-smoothing, morphing face, extra fingers, warping product/label/text, flicker, plastic sheen, cinematic color grade, slow-mo, perfect studio lighting.",
+  "REFERENCE LOCK (critical): the on-screen person AND the product are both provided as REFERENCE IMAGES inside the video tool (Google Flow), which locks their exact appearance. Therefore DO NOT describe or invent the character's physical features (age, face, hair, skin tone, marks, wardrobe) or the product's packaging/color/label/shape. Instead refer to them as \"the reference character\" and \"the reference product\", and instruct that they must MATCH the reference images EXACTLY and stay identical in every scene. Only describe pose, expression, action, and how the character interacts with the product."
+].join("\n");
 
 const HOOKS = [
   {id:"negative_warning", label:"Cảnh báo ngược", desc:"presenter warns 'think twice before using this' to trigger curiosity"},
@@ -444,34 +498,38 @@ const VOCAB = {
 const SCENE_SCHEMA = {
   scene_id:"integer",
   beat:"Hook | Authenticity | Proof | SensoryDemo | Offer_CTA",
-  duration_seconds:"number (2-13)",
-  subject:"string (age, ethnicity, hair, wardrobe, skin state)",
-  action:"string (exact physical action + product interaction)",
-  setting:"string (background, props)",
+  duration_seconds:"number (~10)",
+  subject:"string — refer to 'the reference character' (identity locked by the uploaded reference image). Describe ONLY pose, expression and demeanor, NEVER physical features/hair/skin/wardrobe.",
+  action:"string (continuous physical action performed WHILE speaking; interactions use 'the reference product')",
+  setting:"string (consistent room, background, props)",
   camera:{shot_type:"ECU | CU | MCU | MS", angle:"eye-level | slight-low | 45-degree | profile", movement:"static | push-in | subtle drift | handheld-jitter"},
-  lighting:"string (inherit global_style unless overridden)",
+  lighting:"string",
   color_palette:"string",
   style_mood:"string (keywords)",
-  on_screen_text:{content_th:"string", position:"string", style:"string"},
-  audio:{voiceover_th:"string (verbatim line)", tone:"string", sfx:"string|none", bgm:"string|none"},
+  on_screen_text:{content_th:"string (Thai)", position:"string", style:"string"},
+  audio:{voiceover_th:"string — CONTINUOUS natural Thai monologue, ~duration×4.3 words (≈43 words for a 10s clip), spoken fast while acting, no dead air", tone:"string", sfx:"string|none", bgm:"string|none"},
   transition_to_next:"hard-cut | jump-cut",
-  purpose:"string (role in the 5-beat structure)"
+  purpose:"string (role in the 5-beat structure)",
+  veo_prompt:"string — SELF-CONTAINED English text prompt for THIS one ~10s clip, ready to paste into Veo/Flow. Bundle: 'the reference character' + 'the reference product' (MUST match the reference images exactly, no invented features) + pose/action + setting + camera + lighting + realism cues + negatives + the exact Thai dialogue to speak (in quotes) + on-screen Thai text. HARD LIMIT: under 3800 characters."
 };
 
-// C5 few-shot example scene
+const VEO_MAX = 4000, VEO_TARGET = 3800; // trần ký tự mỗi prompt cảnh
+
+// C5 few-shot example scene (10s, continuous dialogue, realism, reference-locked, veo_prompt)
 const EXAMPLE_SCENE = {
-  scene_id:1, beat:"Hook", duration_seconds:3,
-  subject:"A 37-year-old Thai woman, long sleek black hair, peach knit cardigan, exceptionally glowing glass skin",
-  action:"Holds an amber essence bottle upside down near her forehead, letting clear viscous liquid drip down her right cheek, playful warning expression to camera",
-  setting:"Cozy home bedroom, white wooden door and light-grey bedding blurred in background",
-  camera:{shot_type:"MCU", angle:"eye-level", movement:"static with handheld micro-jitter"},
-  lighting:"high-key soft ring light, circular catchlight in pupils, strong dewy specular highlights on cheeks",
-  color_palette:"warm tone, peach cardigan, amber bottle, beige background, natural saturation",
-  style_mood:"authentic UGC, cozy, sisterly, high-energy",
-  on_screen_text:{content_th:"อายุ 37 / [PIP] อายุ 34", position:"chest area + top-left overlay photo", style:"bold rounded white font, colored outline"},
-  audio:{voiceover_th:"คำเตือน ใครจะใช้น้ำตบตัวนี้คิดดีๆ ก่อนนะ", tone:"fast, playful-warning, high-pitch", sfx:"none", bgm:"none"},
+  scene_id:1, beat:"Hook", duration_seconds:10,
+  subject:"The reference character (identity from the uploaded reference image). Playful, warm, high-energy demeanor, talking straight to the front camera with a teasing warning look.",
+  action:"Holds the reference product (an essence bottle) upside down near her forehead, lets a clear viscous drop slide down her cheek, dabs it in with two fingertips, and keeps talking fast to the front camera the whole time",
+  setting:"Cozy home bedroom, white wooden door and light-grey bedding softly blurred behind her, warm lamp in corner",
+  camera:{shot_type:"MCU", angle:"eye-level", movement:"handheld-jitter"},
+  lighting:"real ring light + warm room lamp mix, circular catchlight in pupils, believable dewy specular, natural falloff",
+  color_palette:"raw phone color, warm tone, beige background, slight shadow noise",
+  style_mood:"authentic amateur UGC, cozy, sisterly, high-energy, real not cinematic",
+  on_screen_text:{content_th:"อายุ 37 ปี แต่ผิวยังเด้ง! / [PIP รูปเก่า อายุ 34]", position:"chest area + small top-left overlay photo", style:"bold rounded white font, colored outline"},
+  audio:{voiceover_th:"เดี๋ยวๆ ใครกำลังจะกดสั่งน้ำตบตัวนี้ ฟังก่อนนะคะ! คือเราอายุ 37 แล้วนะ แต่คนทักตลอดว่าทำไมผิวยังเด้งยังฉ่ำอยู่เลย บอกเลยว่าลับๆ อยู่ที่ขวดนี้แหละค่ะ ตบปุ๊บซึมปั๊บ หน้าฉ่ำวิ้งเหมือนกระจกเลย ดูสิๆ นี่ไม่ได้ใช้ฟิลเตอร์เลยนะ ของจริงล้วนๆ", tone:"fast, playful-warning, high-pitch, ~43 words in 10s", sfx:"none", bgm:"none"},
   transition_to_next:"jump-cut",
-  purpose:"3-second stop-scroll hook via negative-warning + age-contrast curiosity"
+  purpose:"10-second stop-scroll hook: negative-warning + age-contrast, dialogue runs the full clip while she demos dewy skin",
+  veo_prompt:"Hyper-realistic vertical 9:16 selfie video, indistinguishable from real handheld footage shot on a phone front camera by a normal person. The on-screen person is THE REFERENCE CHARACTER and must match the reference image exactly (do not alter or invent her face, hair, skin or wardrobe). The product is THE REFERENCE PRODUCT (an essence bottle) and must match the product reference image exactly (do not redesign packaging, label or color). She holds the reference product upside down near her forehead, a clear viscous drop slides down her cheek, she dabs it with two fingertips and keeps talking fast to camera with a playful warning face. Setting: cozy bedroom, white wooden door and grey bedding softly blurred, warm corner lamp. Camera: arm's-length handheld MCU, eye-level, organic shake, slight auto-exposure shift, mild focus hunt, faint lens smudge, natural motion blur. Lighting: ring light + warm room lamp, catchlight in pupils, believable dewy specular, natural falloff. Color: raw unfiltered phone color, warm tone, slight shadow noise, no beauty filter, no cinematic grade. Realistic human skin texture with visible pores, natural blinks and micro-expressions. She speaks continuous natural fast Thai the entire 10 seconds, accurate lip-sync: \"เดี๋ยวๆ ใครกำลังจะกดสั่งน้ำตบตัวนี้ ฟังก่อนนะคะ! คือเราอายุ 37 แล้วนะ แต่คนทักตลอดว่าทำไมผิวยังเด้งยังฉ่ำอยู่เลย บอกเลยว่าลับๆ อยู่ที่ขวดนี้แหละค่ะ ตบปุ๊บซึมปั๊บ หน้าฉ่ำวิ้งเหมือนกระจกเลย ดูสิๆ นี่ไม่ได้ใช้ฟิลเตอร์เลยนะ ของจริงล้วนๆ\". Bold white Thai on-screen text with colored outline reading \"อายุ 37 ปี แต่ผิวยังเด้ง!\" over the chest, plus a small top-left overlay photo labeled age 34. Real amateur UGC energy, high-pitch. NEGATIVE: AI look, waxy or plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped bottle or label or text, flicker, slow-motion, studio perfection, teal-orange grade."
 };
 
 // beat metadata
@@ -524,6 +582,7 @@ const state = {
   ctas:["soft_self_buy"],
   note:"",
   sceneCount:5,
+  sceneDuration:10,
   provider:"gemini",
   models:{gemini:PROVIDERS.gemini.defaultModel, openai:PROVIDERS.openai.defaultModel, claude:PROVIDERS.claude.defaultModel},
   keys:{gemini:"", openai:"", claude:""},
@@ -641,7 +700,8 @@ function renderCount(){
   $("countBtns").querySelectorAll('.count-btn').forEach(b=>{
     b.addEventListener('click',()=>{ state.sceneCount=+b.dataset.n; renderCount(); save(); });
   });
-  $("countMeta").textContent = `${state.sceneCount} cảnh × ~10s ≈ ${state.sceneCount*10}s tổng`;
+  const d=state.sceneDuration, words=Math.round(d*4.3);
+  $("countMeta").textContent = `${state.sceneCount} cảnh × ${d}s ≈ ${state.sceneCount*d}s tổng · ~${words} từ thoại/cảnh`;
   renderStrip();
 }
 function renderStrip(){
@@ -651,10 +711,29 @@ function renderStrip(){
     return `<div class="cell" style="background:${m.tint}">
       <span class="n">S${i+1}</span>
       <span class="bn">${m.vi}</span>
-      <span class="sec">~10s</span>
+      <span class="sec">~${state.sceneDuration}s</span>
     </div>`;
   }).join('');
 }
+function updateSliderFill(){
+  const el=$("durSlider"), min=+el.min, max=+el.max;
+  const pct=((+el.value-min)/(max-min))*100;
+  el.style.background=`linear-gradient(to right,var(--honey) 0%,var(--honey) ${pct}%,var(--line-strong) ${pct}%,var(--line-strong) 100%)`;
+}
+(function initSlider(){
+  const el=$("durSlider");
+  el.value=state.sceneDuration;
+  $("durVal").textContent=state.sceneDuration+"s";
+  updateSliderFill();
+  el.addEventListener("input",()=>{
+    state.sceneDuration=+el.value;
+    $("durVal").textContent=el.value+"s";
+    updateSliderFill();
+    const d=state.sceneDuration, words=Math.round(d*4.3);
+    $("countMeta").textContent = `${state.sceneCount} cảnh × ${d}s ≈ ${state.sceneCount*d}s tổng · ~${words} từ thoại/cảnh`;
+    renderStrip(); save();
+  });
+})();
 function renderProvider(){
   $("providerSeg").innerHTML = Object.entries(PROVIDERS).map(([k,p])=>`
     <label class="seg-opt ${state.provider===k?'on':''}" data-id="${k}">
@@ -715,6 +794,9 @@ JSON.stringify(GLOBAL_STYLE, null, 2),
 "## VOCABULARY BANK (reuse these keywords in the visual fields):",
 JSON.stringify(VOCAB, null, 2),
 "",
+"## REALISM DIRECTIVE (top priority — the video must pass as real, not AI):",
+REALISM_DIRECTIVE,
+"",
 "## PER-SCENE OUTPUT SCHEMA (each scene object MUST contain exactly these fields):",
 JSON.stringify(SCENE_SCHEMA, null, 2),
 "Allowed enums — beat: Hook|Authenticity|Proof|SensoryDemo|Offer_CTA ; camera.shot_type: ECU|CU|MCU|MS ; camera.angle: eye-level|slight-low|45-degree|profile ; camera.movement: static|push-in|subtle drift|handheld-jitter ; transition_to_next: hard-cut|jump-cut.",
@@ -724,16 +806,18 @@ JSON.stringify(EXAMPLE_SCENE, null, 2),
 "",
 "## HARD RULES:",
 "- Output the EXACT number of scenes requested, in order, following the provided beat_plan (scene i gets beat_plan[i]).",
-"- Each scene duration_seconds ≈ 10 (may vary 8–12); scene_id is 1-based sequential.",
+"- Each scene duration_seconds = the requested SCENE DURATION; scene_id is 1-based sequential.",
 "- Visual/technical fields (subject, action, setting, camera, lighting, color_palette, style_mood, purpose) in ENGLISH.",
-"- audio.voiceover_th and on_screen_text.content_th MUST be natural, fluent THAI (real dialogue a Thai creator would say), matching the beat.",
-"- The PRODUCT is defined by the user (name + description + optional reference images). Render its REAL appearance faithfully in every scene where it is shown — packaging shape, cap/lid, label text placement, texture and color — based on the images if provided, otherwise the description. Never substitute a different product. If reference images are attached, treat them as the ground truth for how the product looks.",
-"- Distribute the user's SELECTED hooks/proofs/ctas across the matching beats. If several hooks are selected, combine them in the Hook scene (like the negative-warning + age-contrast example). If multiple proof scenes exist, spread the selected proofs; if only one, combine them.",
-"- Always preserve the mandatory content even when scene count is small: a stop-scroll hook, at least one proof, a sensory application demo (thoa/vỗ da khoe texture), and a CTA/urgency. Fold missing beats' content into adjacent scenes when there is no dedicated scene for them.",
-"- Keep it photorealistic UGC (no heavy beauty filter), warm tone, ring-light dewy glass skin, fast jump-cuts, female Thai voiceover.",
+"- DIALOGUE LENGTH: audio.voiceover_th MUST be a CONTINUOUS natural Thai monologue long enough to fill the whole clip at ~4.3 words/second → about duration_seconds × 4.3 words (≈43 words for a 10s clip). No short lines, no dead air. The speaker talks the entire clip WHILE performing the action (natural, spoken, casual register with real filler words). on_screen_text.content_th is separate, short punchy Thai.",
+"- REALISM: every scene must read as authentic real-person handheld footage — apply the REALISM DIRECTIVE above (real-camera cues, real skin texture, natural performance, accurate Thai lip-sync, explicit negatives).",
+"- REFERENCE LOCK: the character and the product are locked by REFERENCE IMAGES in the video tool. Do NOT describe or invent the character's physical features/hair/skin/wardrobe, and do NOT redesign the product's packaging/label/color. Always call them 'the reference character' and 'the reference product', and state they must match the reference images exactly and stay identical across all scenes. Describe only pose, expression, action and product interaction. Keep the room/setting/lighting consistent across scenes.",
+"- The user provides a product name + description (and maybe images) only for CONTEXT so you know what the product is and how it is used (bottle vs jar vs tube, how to apply it) — use that to write correct actions, but never override the visual with invented packaging details; the reference image is the source of truth for how it looks.",
+"- Distribute the user's SELECTED hooks/proofs/ctas across the matching beats. If several hooks are selected, combine them in the Hook scene. If multiple proof scenes exist, spread the selected proofs; if only one, combine them.",
+"- Always preserve mandatory content: a stop-scroll hook, at least one proof, a sensory application demo, and a CTA/urgency. Fold missing beats into adjacent scenes when there is no dedicated scene.",
+"- VEO PROMPT PER SCENE: fill veo_prompt = one self-contained English clip prompt bundling 'the reference character' + 'the reference product' (must match the reference images exactly, no invented features) + pose/action + setting + camera + lighting + realism cues + negatives + the exact Thai dialogue (in quotes, verbatim same as voiceover_th) + the on-screen Thai text. It must be pasteable alone into Veo/Flow. HARD CHARACTER LIMIT: veo_prompt MUST be under 3800 characters (never exceed 4000). Be rich but concise; if near the limit, trim adjectives, not the dialogue.",
 "",
 "## RESPONSE FORMAT — return ONE JSON object ONLY, no markdown fences, no commentary:",
-'{ "scenes": [ <scene objects matching the schema> ], "prose_prompt": "<readable walkthrough: one short paragraph per scene, prefixed \\"Scene N — <beat>:\\", English scene description suitable to paste/skim> " }'
+'{ "scenes": [ <scene objects matching the schema, each including a valid veo_prompt under 3800 chars> ] }'
   ].join("\n");
 }
 
@@ -745,9 +829,9 @@ function buildUserPrompt(){
   const fmt = arr => arr.map(o=>`- ${o.id}: ${o.desc}`).join("\n");
   const nImg = state.productImages.length;
   return [
-`PRODUCT NAME: ${state.productName.trim() || "(unnamed cosmetic product)"}`,
-`PRODUCT DESCRIPTION (from user): ${state.productDesc.trim() || "(none provided — infer sensible skincare packaging)"}`,
-`PRODUCT REFERENCE IMAGES: ${nImg>0 ? nImg+" image(s) attached — use them as ground truth for the product's real look (bottle/jar, cap/lid, label, texture, color)." : "none attached — rely on the description."}`,
+`PRODUCT NAME (context only): ${state.productName.trim() || "(unnamed cosmetic product)"}`,
+`PRODUCT DESCRIPTION (context only, for correct usage/action — NOT for inventing looks): ${state.productDesc.trim() || "(none provided)"}`,
+`PRODUCT & CHARACTER APPEARANCE: locked by reference images in the video tool (Tool 2 / Google Flow). Refer to them as 'the reference character' and 'the reference product'; do NOT describe the character's features or redesign the product — they must match the reference images exactly in every scene.`,
 "",
 "HOOKS selected (combine if >1):",
 fmt(hks),
@@ -758,11 +842,15 @@ fmt(prf),
 "CTAS selected:",
 fmt(cta),
 "",
-`SCENE COUNT: ${state.sceneCount}  (each ~10s, total ~${state.sceneCount*10}s)`,
+`SCENE COUNT: ${state.sceneCount}  (each ~${state.sceneDuration}s, total ~${state.sceneCount*state.sceneDuration}s)`,
 `BEAT PLAN (scene → beat): ${plan.map((b,i)=>`S${i+1}=${b}`).join(", ")}`,
+`SCENE DURATION: set every scene's duration_seconds = ${state.sceneDuration}.`,
+`DIALOGUE TARGET: ~${Math.round(state.sceneDuration*4.3)} Thai words per scene (${state.sceneDuration}s × 4.3 words/sec), continuous, spoken while acting, no dead air.`,
+`REALISM: must look 1:1 like real handheld phone footage; keep 'the reference character' and 'the reference product' identical across scenes (from reference images); include real-camera + real-skin cues and explicit negatives in each veo_prompt.`,
+`Each veo_prompt MUST stay under 3800 characters.`,
 state.note.trim() ? `\nEXTRA DIRECTION FROM USER: ${state.note.trim()}` : "",
 "",
-"Generate the scene array + prose_prompt now, as a single JSON object."
+"Generate the scenes array now, as a single JSON object with each scene including a valid veo_prompt."
   ].join("\n");
 }
 
@@ -844,23 +932,68 @@ function extractJson(text){
   if(s>=0 && e>s){ try{ return JSON.parse(t.slice(s,e+1)); }catch(_){} }
   throw new Error("Không parse được JSON từ phản hồi của model. Thử lại hoặc đổi model.");
 }
-function proseFromScenes(scenes){
-  return scenes.map(sc=>{
-    const cam = sc.camera||{};
-    return `Scene ${sc.scene_id} — ${sc.beat} (~${sc.duration_seconds||10}s):
-${sc.subject||""}. ${sc.action||""} Setting: ${sc.setting||""}. Camera: ${cam.shot_type||""}, ${cam.angle||""}, ${cam.movement||""}. Lighting: ${sc.lighting||""}. Palette: ${sc.color_palette||""}. Mood: ${sc.style_mood||""}. On-screen (TH): "${sc.on_screen_text?.content_th||""}". Voiceover (TH): "${sc.audio?.voiceover_th||""}". Transition: ${sc.transition_to_next||"jump-cut"}.`;
-  }).join("\n\n");
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function copyText(text, labelEl){
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand("copy");}catch(_){} ta.remove(); }
+  if(labelEl){ const old=labelEl.textContent; labelEl.textContent="Đã copy ✓"; setTimeout(()=>labelEl.textContent=old,1400); }
+}
+// Dựng veo_prompt từ các trường nếu model quên trả veo_prompt
+function veoFromScene(sc){
+  const cam=sc.camera||{}, ost=sc.on_screen_text||{}, au=sc.audio||{};
+  return [
+    "Hyper-realistic vertical 9:16 selfie video, indistinguishable from real handheld phone footage (not AI, not cinematic).",
+    "The on-screen person is THE REFERENCE CHARACTER and must match the reference image exactly (do not alter or invent her appearance). The product is THE REFERENCE PRODUCT and must match the product reference image exactly (do not redesign packaging/label/color).",
+    sc.subject ? `Performance: ${sc.subject}.` : "",
+    `Action: ${sc.action||""}.`,
+    `Setting: ${sc.setting||""}.`,
+    `Camera: ${cam.shot_type||""} ${cam.angle||""} ${cam.movement||""}, arm's-length handheld, organic shake, auto-exposure/white-balance shifts, mild focus hunt, natural motion blur.`,
+    `Lighting: ${sc.lighting||""}. Color: ${sc.color_palette||""}, raw unfiltered phone color, no beauty filter.`,
+    "Realistic human skin texture with visible pores, natural blinks and micro-expressions, accurate Thai lip-sync.",
+    au.voiceover_th ? `She speaks continuous natural fast Thai for the whole ~${sc.duration_seconds||10}s: "${au.voiceover_th}".` : "",
+    ost.content_th ? `On-screen Thai text: "${ost.content_th}" (${ost.style||"bold white, colored outline"}).` : "",
+    "NEGATIVE: AI look, waxy/plastic over-smoothed skin, morphing face, changing the reference identity, extra fingers, warped product/label/text, flicker, slow-motion, studio perfection, teal-orange grade."
+  ].filter(Boolean).join(" ");
 }
 
-let currentJson="", currentProse="";
+let currentScenes=[], currentPrompts=[];
 function renderOutput(env){
   const scenes = Array.isArray(env?.scenes) ? env.scenes : (Array.isArray(env) ? env : null);
-  if(!scenes) throw new Error("Model không trả về mảng 'scenes'. Thử lại.");
-  currentJson = JSON.stringify(scenes, null, 2);
-  currentProse = (env && typeof env.prose_prompt==="string" && env.prose_prompt.trim()) ? env.prose_prompt.trim() : proseFromScenes(scenes);
-  $("jsonOut").textContent = currentJson;
-  // đánh dấu chữ Thái để render đúng font (nhẹ nhàng, không đổi nội dung)
-  $("proseOut").innerHTML = currentProse.replace(/[\u0E00-\u0E7F]+(?:[\s\u0E00-\u0E7F]*[\u0E00-\u0E7F])?/g, m=>`<span class="th">${m}</span>`);
+  if(!scenes || !scenes.length) throw new Error("Model không trả về mảng 'scenes'. Thử lại.");
+  currentScenes = scenes;
+  currentPrompts = scenes.map(sc => (typeof sc.veo_prompt==="string" && sc.veo_prompt.trim()) ? sc.veo_prompt.trim() : veoFromScene(sc));
+  $("sceneCountOut").textContent = scenes.length;
+  const cont = $("scenes"); cont.innerHTML="";
+  scenes.forEach((sc,i)=>{
+    const beat = (sc.beat && BEAT_META[sc.beat]) ? sc.beat : (BEAT_PLANS[state.sceneCount]?.[i] || "Hook");
+    const meta = BEAT_META[beat] || {vi:beat, tint:"var(--honey)"};
+    const prompt = currentPrompts[i];
+    const len = prompt.length;
+    const over = len > VEO_TARGET;
+    const id = sc.scene_id || (i+1);
+    const card = document.createElement("div");
+    card.className = "scene";
+    card.innerHTML = `
+      <div class="scene-head">
+        <span class="scene-tag" style="background:${meta.tint}"></span>
+        <span class="scene-name">Cảnh ${id}</span>
+        <span class="scene-beat">· ${meta.vi} · ~${sc.duration_seconds||10}s</span>
+        <span class="scene-spacer"></span>
+        <span class="charcount ${over?'over':''}" title="${over?'Vượt trần 3800 ký tự':'Trong giới hạn'}">${len.toLocaleString('vi-VN')} / ${VEO_TARGET}</span>
+        <button class="scene-copy" type="button">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <span>Copy cảnh ${id}</span>
+        </button>
+      </div>
+      <div class="scene-prompt"></div>
+      <div class="scene-meta"><b>Thoại (TH):</b> <span class="th">${escapeHtml(sc.audio?.voiceover_th||"—")}</span></div>
+      <details class="jsonwrap"><summary>JSON cảnh này (cho Tool 2)</summary><pre class="scene-json"></pre></details>`;
+    card.querySelector(".scene-prompt").textContent = prompt;
+    card.querySelector(".scene-json").textContent = JSON.stringify(sc, null, 2);
+    const b = card.querySelector(".scene-copy");
+    b.addEventListener("click", ()=> copyText(prompt, b.querySelector("span")));
+    cont.appendChild(card);
+  });
   $("output").classList.add("show");
   $("output").scrollIntoView({behavior:"smooth", block:"start"});
 }
@@ -900,7 +1033,8 @@ $("goBtn").addEventListener("click", async ()=>{
     setStatus("Đang xử lý phản hồi…");
     const env=extractJson(raw);
     renderOutput(env);
-    setStatus(`Xong · ${Array.isArray(env.scenes?env.scenes:env)?.length||''} cảnh.`);
+    const over=currentPrompts.filter(p=>p.length>VEO_TARGET).length;
+    setStatus(`Xong · ${currentScenes.length} cảnh${over?` · ⚠ ${over} cảnh vượt 3800 ký tự`:""}.`);
   }catch(err){
     let hint="";
     const m=(err&&err.message)||String(err);
@@ -916,25 +1050,15 @@ $("goBtn").addEventListener("click", async ()=>{
   }finally{ busy(false); }
 });
 
-/* Tabs + copy */
-document.querySelectorAll(".tab").forEach(t=>{
-  t.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
-    t.classList.add("on");
-    const pane=t.dataset.pane;
-    $("paneJson").classList.toggle("on", pane==="json");
-    $("paneProse").classList.toggle("on", pane==="prose");
-    $("copyLabel").textContent = pane==="json" ? "Copy JSON" : "Copy prompt";
-  });
+/* Copy toàn bộ / copy JSON mảng */
+$("copyAllBtn").addEventListener("click", ()=>{
+  if(!currentPrompts.length) return;
+  const txt = currentScenes.map((sc,i)=>`=== SCENE ${sc.scene_id||i+1} — ${sc.beat||''} (~${sc.duration_seconds||10}s) ===\n${currentPrompts[i]}`).join("\n\n\n");
+  copyText(txt, $("copyAllBtn").querySelector("span"));
 });
-$("copyBtn").addEventListener("click", async ()=>{
-  const onJson=$("paneJson").classList.contains("on");
-  const txt=onJson?currentJson:currentProse;
-  if(!txt) return;
-  try{ await navigator.clipboard.writeText(txt); }
-  catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
-  const lbl=$("copyLabel"); const old=lbl.textContent; lbl.textContent="Đã copy ✓";
-  setTimeout(()=>lbl.textContent=old,1400);
+$("copyJsonBtn").addEventListener("click", ()=>{
+  if(!currentScenes.length) return;
+  copyText(JSON.stringify(currentScenes, null, 2), $("copyJsonBtn").querySelector("span"));
 });
 </script>
 </body>
